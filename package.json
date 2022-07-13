@@ -1,0 +1,40 @@
+{
+  "name": "gmtk-gamejam",
+  "version": "0.0.0",
+  "description": "GMTK GameJam 2022 Entry - Browser Game",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "dev": "npm-run-all --parallel start watch",
+    "prod": "npm-run-all build start",
+    "start": "serve dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rwarnking/gmtk-gamejam.git"
+  },
+  "keywords": [
+    "game",
+    "browser",
+    "gmtk"
+  ],
+  "author": "René Warnking",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rwarnking/gmtk-gamejam/issues"
+  },
+  "homepage": "https://github.com/rwarnking/gmtk-gamejam#readme",
+  "dependencies": {
+    "rollup": "^2.76.0",
+    "three": "^0.142.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "npm-run-all": "^4.1.5",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-terser": "^7.0.2",
+    "serve": "^14.0.0"
+  }
+}

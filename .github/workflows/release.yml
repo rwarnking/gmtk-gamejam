@@ -1,0 +1,129 @@
+############################
+############################
+## Release GitHub Actions ##
+############################
+############################
+name: Create Release
+
+#################################
+# Start the job on push to main #
+#################################
+on:
+  push:
+    branches:
+      - main
+
+# Set the Jobs
+jobs:
+  ####################
+  # Add and push tag #
+  ####################
+  create_tag:
+    # Name the Job
+    name: Create the Tag
+    # Set the agent to run on
+    runs-on: ubuntu-latest
+
+    # Load all steps
+    steps:
+      # Checkout the code base
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      # Get last tag
+      # https://github.com/marketplace/actions/get-latest-tag
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 0.0.0
+      # Create new tag
+      - name: 'Get next minor version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.previoustag.outputs.tag }}
+      # Set github data
+      - name: Set access data
+        run: |
+          git config --global user.name 'rwarnking'
+          git config --global user.email 'rwarnking@users.noreply.github.com'
+      # Add and push tag
+      - name: Determine version (Major, Minor, Patch)
+        env:
+          COMMITMSG: ${{ github.event.head_commit.message }}
+        run: |
+          if [[ "$COMMITMSG" =~ ^Major: ]]; then
+          git tag -a ${{ steps.semvers.outputs.v_major }} -m "New version ${{ steps.semvers.outputs.v_major }}"
+          git push origin ${{ steps.semvers.outputs.v_major }}
+          elif [[ "$COMMITMSG" =~ ^Minor: ]]; then
+          git tag -a ${{ steps.semvers.outputs.v_minor }} -m "New version ${{ steps.semvers.outputs.v_minor }}"
+          git push origin ${{ steps.semvers.outputs.v_minor }}
+          elif [[ "$COMMITMSG" =~ ^Patch: ]]; then
+          git tag -a ${{ steps.semvers.outputs.v_patch }} -m "New version ${{ steps.semvers.outputs.v_patch }}"
+          git push origin ${{ steps.semvers.outputs.v_patch }}
+          fi
+
+  ##################
+  # Create release #
+  ##################
+  create_release:
+    # Name the Job
+    name: Create Release
+    # Set the agent to run on
+    runs-on: ubuntu-latest
+    # Requires
+    needs: create_tag
+
+    outputs:
+      upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
+      version: ${{ steps.set_version.outputs.version }}
+
+    # Load all steps
+    steps:
+      # Checkout the code base
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      # Get last tag
+      # https://github.com/marketplace/actions/get-latest-tag
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        continue-on-error: true
+      # Check if changelog file exists
+      - name: Check file existence
+        if: steps.previoustag.outcome == 'success'
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: changelogs/${{ steps.previoustag.outputs.tag }}.md
+      # If not create a dummy file
+      - name: Create if file does not exist
+        if: steps.previoustag.outcome == 'success' && steps.check_files.outputs.files_exists == 'false'
+        uses: "finnp/create-file-action@master"
+        env:
+          FILE_NAME: changelogs/${{ steps.previoustag.outputs.tag }}.md
+          FILE_DATA: "No Changelog present for version ${{ steps.previoustag.outputs.tag }}!"
+      # Create release
+      - name: Create release
+        if: steps.previoustag.outcome == 'success'
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.previoustag.outputs.tag }}
+          release_name: Release ${{ steps.previoustag.outputs.tag }}
+          body_path: changelogs/${{ steps.previoustag.outputs.tag }}.md
+          draft: false
+          prerelease: false
+      # Setup URL
+      - id: set_upload_url
+        if: steps.previoustag.outcome == 'success'
+        run: echo "::set-output name=upload_url::${{ steps.create_release.outputs.upload_url }}"
+      - id: set_version
+        if: steps.previoustag.outcome == 'success'
+        run: echo "::set-output name=version::${{ steps.previoustag.outputs.tag }}"
