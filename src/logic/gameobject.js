@@ -1,7 +1,7 @@
 export default class GameObject {
 
     constructor(object3d) {
-        this.object3d = object3d;
+        this.obj3d = object3d;
         this.components = [];
     }
 
@@ -17,6 +17,6 @@ export default class GameObject {
      * @param {Number} delta
      */
     update(delta) {
-        this.components.forEach(c => c(this.object3d, delta));
+        this.components.forEach(c => c.call(delta));
     }
 }

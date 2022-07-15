@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/rwarnking/gmtk-gamejam#readme",
   "dependencies": {
+    "cash-dom": "^8.1.1",
     "rollup": "^2.76.0",
     "three": "^0.142.0"
   },

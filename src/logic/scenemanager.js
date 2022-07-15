@@ -9,7 +9,7 @@ export default class SceneManager {
     setupScene(sceneInit) {
         const scene = new THREE.Scene();
         this.objects = sceneInit();
-        this.objects.forEach(obj => scene.add(obj.object3d));
+        this.objects.forEach(obj => scene.add(obj.obj3d));
         return scene;
     }
 

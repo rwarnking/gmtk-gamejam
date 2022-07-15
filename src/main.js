@@ -1,14 +1,9 @@
-import Renderer from "./renderer/renderer";
-import SceneManager from "./logic/scenemanager";
-import { level1 } from "./logic/scenes";
+
+import GAME from './core/globals';
+import Inputs from './core/inputs'
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    const renderer = new Renderer();
-    renderer.setupRenderer();
-
-    const smgr = new SceneManager();
-    const scene = smgr.setupScene(level1);
     let last, delta;
 
     function animate(timestamp) {
@@ -20,13 +15,15 @@ document.addEventListener("DOMContentLoaded", function() {
             delta = timestamp - last;
         }
 
-        smgr.update(delta);
-
-        renderer.render(scene);
+        Inputs.update();
+        GAME.sceneMgr().update(delta);
+        GAME.renderer().render(GAME.scene());
 
         last = timestamp;
         requestAnimationFrame(animate);
     };
+
+    GAME.init();
 
     animate();
 });
