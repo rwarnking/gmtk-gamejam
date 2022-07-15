@@ -1,6 +1,6 @@
 import Renderer from "./renderer/renderer";
 import SceneManager from "./logic/scenemanager";
-import { level1 } from "./logic/scenes";
+import { level1, level2 } from "./logic/scenes";
 
 document.addEventListener("DOMContentLoaded", function() {
 

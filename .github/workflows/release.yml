@@ -63,6 +63,9 @@ jobs:
           elif [[ "$COMMITMSG" =~ ^Patch: ]]; then
           git tag -a ${{ steps.semvers.outputs.v_patch }} -m "New version ${{ steps.semvers.outputs.v_patch }}"
           git push origin ${{ steps.semvers.outputs.v_patch }}
+          elif [[ "$COMMITMSG" =~ ^Update: ]]; then
+          git tag -a ${{ steps.semvers.outputs.v_patch }} -m "New version ${{ steps.semvers.outputs.v_patch }}"
+          git push origin ${{ steps.semvers.outputs.v_patch }}
           fi
 
   ##################
