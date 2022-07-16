@@ -24,6 +24,9 @@ jobs:
     # Set the agent to run on
     runs-on: ubuntu-latest
 
+    outputs:
+      output1: ${{ steps.createversion.outputs.result }}
+
     # Load all steps
     steps:
       # Checkout the code base
@@ -51,21 +54,28 @@ jobs:
           git config --global user.email 'rwarnking@users.noreply.github.com'
       # Add and push tag
       - name: Determine version (Major, Minor, Patch)
+        id: createversion
         env:
           COMMITMSG: ${{ github.event.head_commit.message }}
         run: |
           if [[ "$COMMITMSG" =~ ^Major: ]]; then
           git tag -a ${{ steps.semvers.outputs.v_major }} -m "New version ${{ steps.semvers.outputs.v_major }}"
           git push origin ${{ steps.semvers.outputs.v_major }}
+          echo "::set-output name=result::1"
           elif [[ "$COMMITMSG" =~ ^Minor: ]]; then
           git tag -a ${{ steps.semvers.outputs.v_minor }} -m "New version ${{ steps.semvers.outputs.v_minor }}"
           git push origin ${{ steps.semvers.outputs.v_minor }}
+          echo "::set-output name=result::1"
           elif [[ "$COMMITMSG" =~ ^Patch: ]]; then
           git tag -a ${{ steps.semvers.outputs.v_patch }} -m "New version ${{ steps.semvers.outputs.v_patch }}"
           git push origin ${{ steps.semvers.outputs.v_patch }}
+          echo "::set-output name=result::1"
           elif [[ "$COMMITMSG" =~ ^Update: ]]; then
           git tag -a ${{ steps.semvers.outputs.v_patch }} -m "New version ${{ steps.semvers.outputs.v_patch }}"
           git push origin ${{ steps.semvers.outputs.v_patch }}
+          echo "::set-output name=result::1"
+          else
+          echo "::set-output name=result::0"
           fi
 
   ##################
@@ -98,21 +108,21 @@ jobs:
         continue-on-error: true
       # Check if changelog file exists
       - name: Check file existence
-        if: steps.previoustag.outcome == 'success'
+        if: ${{ needs.create_tag.outputs.output1 == '1' }}
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
           files: changelogs/${{ steps.previoustag.outputs.tag }}.md
       # If not create a dummy file
       - name: Create if file does not exist
-        if: steps.previoustag.outcome == 'success' && steps.check_files.outputs.files_exists == 'false'
+        if: ${{ needs.create_tag.outputs.output1 == '1' }} && steps.check_files.outputs.files_exists == 'false'
         uses: "finnp/create-file-action@master"
         env:
           FILE_NAME: changelogs/${{ steps.previoustag.outputs.tag }}.md
           FILE_DATA: "No Changelog present for version ${{ steps.previoustag.outputs.tag }}!"
       # Create release
       - name: Create release
-        if: steps.previoustag.outcome == 'success'
+        if: ${{ needs.create_tag.outputs.output1 == '1' }}
         id: create_release
         uses: actions/create-release@latest
         env:
@@ -125,8 +135,8 @@ jobs:
           prerelease: false
       # Setup URL
       - id: set_upload_url
-        if: steps.previoustag.outcome == 'success'
+        if: ${{ needs.create_tag.outputs.output1 == '1' }}
         run: echo "::set-output name=upload_url::${{ steps.create_release.outputs.upload_url }}"
       - id: set_version
-        if: steps.previoustag.outcome == 'success'
+        if: ${{ needs.create_tag.outputs.output1 == '1' }}
         run: echo "::set-output name=version::${{ steps.previoustag.outputs.tag }}"
