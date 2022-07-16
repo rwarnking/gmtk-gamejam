@@ -1,12 +1,13 @@
 import Renderer from "../renderer/renderer";
 import SceneManager from "../logic/scenemanager";
 import { level1, level2 } from "../logic/scenes";
+import AudioListener from "../logic/audio";
 import * as THREE from 'three';
 
 
 const GAME = (function() {
 
-    let renderer, smgr, scene;
+    let renderer, smgr, scene,audiolistener;
 
     return {
 
@@ -14,19 +15,17 @@ const GAME = (function() {
             renderer = new Renderer();
             renderer.setupRenderer();
             smgr = new SceneManager();
-            scene = smgr.setupScene(level2());
+            scene = smgr.setupScene(level1());
 
-            this.audiolistener = new THREE.AudioListener;
-        
-            var sound = new THREE.Audio(this.audiolistener);
-            var loader = new THREE.AudioLoader();
-            loader.load('/audio/music.wav',(buffer)=>{
-                sound.setBuffer(buffer);
-                sound.setLoop(true)
-                sound.setVolume(1);
-                sound.play();
-            });
+            audiolistener = new AudioListener();    
+            audiolistener.changesound();
+            audiolistener.changevolume(0.4);
+            
 
+        },
+
+        audiolistener: function(){
+            return audiolistener;
         },
 
         renderer: function() {
