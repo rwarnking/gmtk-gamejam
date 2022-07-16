@@ -4,12 +4,13 @@ export default class Renderer {
 
     constructor() {
         this.readWindowDimension();
+        this.pickingTexture = new THREE.WebGLRenderTarget(this.width, this.height);
         window.addEventListener('resize', () => {
             // clear the timeout
             clearTimeout(this.resizeTimeout);
             // start timing for event "completion"
             this.resizeTimeout = setTimeout(this.readWindowDimension.bind(this), 75);
-          });
+        });
     }
 
     readWindowDimension() {
@@ -20,13 +21,13 @@ export default class Renderer {
         }
         if (this.camera) {
             // TODO: not sure if this line is necessary
-            this.camera.aspect = width / height;
+            this.camera.aspect = this.width / this.height;
             this.camera.updateProjectionMatrix();
         }
     }
 
     setupRenderer() {
-        this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        this.camera = new THREE.PerspectiveCamera( 75, this.width / this.height, 0.1, 1000 );
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(this.width, this.height);
@@ -37,5 +38,31 @@ export default class Renderer {
 
     render(scene) {
         this.renderer.render(scene, this.camera);
+    }
+
+    // https://r105.threejsfundamentals.org/threejs/lessons/threejs-picking.html
+    pickingrender(scene, cssPosition) {
+        this.pixelBuffer = new Uint8Array(4);
+        // render the scene
+        this.renderer.setRenderTarget(this.pickingTexture);
+        this.renderer.render(scene, this.camera);
+        this.renderer.setRenderTarget(null);
+
+        //read the pixel
+        this.renderer.readRenderTargetPixels(
+            this.pickingTexture,
+            cssPosition[0],               // x
+            this.height-cssPosition[1],   // y
+            1,   // width
+            1,   // height
+            this.pixelBuffer
+        );
+
+        const id =
+            (this.pixelBuffer[2] << 16) +
+            (this.pixelBuffer[1] <<  8) +
+            (this.pixelBuffer[0]);
+
+        return id;
     }
 }

@@ -72,7 +72,7 @@ export default class TileLevel {
         switch (type) {
             case CELL.OBSTACLE: return [
                 y % 2 == 0 ? -2 + x : -1.5 + x,
-                -2 + y * 0.25 * 0.75 + 0.5,
+                -2 + y * 0.25 * 0.75 + 0.5 * 0.75,
                 z
             ]
             default: return [
@@ -88,7 +88,7 @@ export default class TileLevel {
 
         switch (type) {
             case CELL.OBSTACLE: {
-                height = 1.5;
+                height = 1.0;
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
                 texture = new THREE.TextureLoader().load(
                     'assets/sprites/obstacle_01.png'

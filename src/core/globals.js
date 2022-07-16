@@ -27,6 +27,10 @@ const GAME = (function() {
             return scene;
         },
 
+        pickingScene: function() {
+            return smgr.pickingScene;
+        },
+
     }
 }());
 

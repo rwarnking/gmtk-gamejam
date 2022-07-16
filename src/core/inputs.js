@@ -15,7 +15,7 @@ const MOUSE_BUTTON = Object.freeze({
 
 class InputHandler {
 
-    constructor(reactionTime=50) {
+    constructor(reactionTime=10) {
         this.reactionTime = reactionTime;
         // init attributes that save data
         this.reset();
@@ -34,19 +34,22 @@ class InputHandler {
     }
 
     reset() {
+        this.lastTime = Date.now();
         this.keys = {};
-        this.mouseClick = {};
-        Object.values(MOUSE_BUTTON).forEach(b => this.mouseClick[b] = { valid: false });
+        this.mouseDown = {};
+        this.mouseUp = {};
+        Object.values(MOUSE_BUTTON).forEach(b => this.mouseDown[b] = { locked: false });
+        Object.values(MOUSE_BUTTON).forEach(b => this.mouseUp[b] = {});
         this.mouseMove = {};
         this.update();
     }
 
     update() {
-        this.lastFrame = Date.now();
+        this.lastTime = Date.now();
     }
 
     onTime(time) {
-        return Math.abs(time - this.lastFrame) < this.reactionTime;
+        return Math.abs(time-this.lastTime) < this.reactionTime;
     }
 
     onKeyDown(event) {
@@ -81,12 +84,12 @@ class InputHandler {
     }
 
     onMouseDown(event) {
-        this.mouseClick[event.button].valid = true;
-        this.onMouse(event, this.mouseClick[event.button]);
+        this.onMouse(event, this.mouseDown[event.button]);
     }
 
     onMouseUp(event) {
-        this.mouseClick[event.button].valid = false;
+        this.onMouse(event, this.mouseUp[event.button]);
+        this.mouseDown[event.button].locked = false;
     }
 
     onMouseMove(event) {
@@ -94,8 +97,8 @@ class InputHandler {
     }
 
     onMouse(event, storage) {
-        storage.x = event.screenX;
-        storage.y = event.screenY;
+        storage.x = event.pageX;
+        storage.y = event.pageY;
         storage.shiftKey = event.shiftKey;
         storage.ctrlKey = event.ctrlKey;
         storage.altKey = event.altKey;
@@ -105,9 +108,32 @@ class InputHandler {
     }
 
     isMouseButtonDown(button) {
-        return this.mouseClick[button].valid || this.onTime(this.mouseClick[button].time);
+        if (!this.mouseDown[button].locked && this.mouseDown[button].time !== undefined) {
+            const pressed = this.onTime(this.mouseDown[button].time);
+
+            if (pressed) {
+                this.mouseDown[button].locked = true;
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
+    isMouseButtonUp(button) {
+        return this.mouseUp[button].time !== undefined &&
+            this.onTime(this.mouseUp[button].time);
+    }
+
+    getMousePosition(button) {
+        if (button === undefined) {
+            return [this.mouseMove.x, this.mouseMove.y];
+        }
+        return [
+            this.mouseDown[button].x,
+            this.mouseDown[button].y
+        ]
+    }
 }
 
 const Inputs = new InputHandler();
