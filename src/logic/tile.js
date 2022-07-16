@@ -17,7 +17,7 @@ class Tile extends GameObject {
 
     constructor(position, celltype=CELL.EMPTY) {
         super({});
-        // 3D position in the grid as array
+        // position in the grid as array
         this.position = position;
         this.cell = celltype;
     }

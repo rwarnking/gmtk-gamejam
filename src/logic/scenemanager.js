@@ -30,7 +30,9 @@ export default class SceneManager {
     }
 
     addGameObject(object) {
-        this.scene.add(object.getObject3D());
+        if (object.getObject3D()) {
+            this.scene.add(object.getObject3D());
+        }
         this.objects.push(object);
     }
 

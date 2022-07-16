@@ -20,13 +20,13 @@ export default class Renderer {
         }
         if (this.camera) {
             // TODO: not sure if this line is necessary
-            this.camera.aspect = width / height;
+            this.camera.aspect = this.width / this.height;
             this.camera.updateProjectionMatrix();
         }
     }
 
     setupRenderer() {
-        this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        this.camera = new THREE.PerspectiveCamera( 75, this.width / this.height, 0.1, 1000 );
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(this.width, this.height);

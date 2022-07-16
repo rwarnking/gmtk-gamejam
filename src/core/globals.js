@@ -27,6 +27,10 @@ const GAME = (function() {
             return scene;
         },
 
+        tileLevel: function() {
+            return smgr.tileLevel
+        }
+
     }
 }());
 

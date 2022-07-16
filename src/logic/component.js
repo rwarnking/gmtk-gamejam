@@ -1,6 +1,7 @@
 export default class Component {
 
-    constructor(gameobject, func) {
+    constructor(gameobject, func=null, type="Component") {
+        this.type = type;
         this.obj = gameobject;
         this.func = func;
     }
@@ -9,6 +10,8 @@ export default class Component {
      *
      */
     call(param) {
-        this.func(this.obj, param);
+        if (this.func !== null) {
+            this.func(this.obj, param);
+        }
     }
 }

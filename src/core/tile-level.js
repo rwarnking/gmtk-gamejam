@@ -68,7 +68,11 @@ export default class TileLevel {
         }
     }
 
-    static calculate3DPosition(x, y, z, type) {
+    static renderOrder(x, y, z) {
+        return (this.height-y) * 2;
+    }
+
+    static calculate3DPosition(x, y, z, type=CELL.DEFAULT) {
         switch (type) {
             case CELL.OBSTACLE: return [
                 y % 2 == 0 ? -2 + x : -1.5 + x,
@@ -121,15 +125,16 @@ export default class TileLevel {
         });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(pos[0], pos[1], pos[2]);
+        mesh.material.map.center = new THREE.Vector2(0.5, 0.5);
+
         // rotate if so wished
         if (rotate) {
             // https://stackoverflow.com/questions/29974578/how-to-flip-a-three-js-texture-horizontally
             mesh.material.map.flipY = false;
             mesh.material.map.rotation = Math.PI;
-            mesh.material.map.center = new THREE.Vector2(0.5, 0.5);
         }
         // set the render order
-        mesh.renderOrder = (this.height-y) * 2; // TODO: +z*2 ??!!
+        mesh.renderOrder = TileLevel.renderOrder(x, y, z); // TODO: +z*2 ??!!
 
         return mesh;
     }
@@ -138,49 +143,49 @@ export default class TileLevel {
         if (Array.isArray(pos)) {
             return this.tiles[pos[0]][pos[1]][pos[2]];
         }
-        return this.tiles[x][y][z];
+        return this.tiles[pos][y][z];
     }
 
     getTileLeft(pos, y, z) {
         if (Array.isArray(pos)) {
             return this.tiles[Math.max(0,pos[0]-1)][pos[1]][-pos[2]];
         }
-        return this.tiles[Math.max(0,x-1)][y][z]
+        return this.tiles[Math.max(0,pos-1)][y][z]
     }
 
     getTileRight(pos, y, z) {
         if (Array.isArray(pos)) {
             return this.tiles[Math.min(this.width-1,pos[0]+1)][pos[1]][pos[2]];
         }
-        return this.tiles[Math.min(this.width-1,x+1)][y][z]
+        return this.tiles[Math.min(this.width-1,pos+1)][y][z]
     }
 
     getTileUp(pos, y, z) {
         if (Array.isArray(pos)) {
             return this.tiles[pos[0]][Math.min(this.height-1,pos[1]+1)][pos[2]];
         }
-        return this.tiles[x][Math.min(this.height-1,y+1)][z]
+        return this.tiles[pos][Math.min(this.height-1,y+1)][z]
     }
 
     getTileDown(pos, y, z) {
         if (Array.isArray(pos)) {
             return this.tiles[pos[0]][Math.max(0,pos[1]-1)][pos[2]];
         }
-        return this.tiles[x][Math.max(0,y-1)][z]
+        return this.tiles[pos][Math.max(0,y-1)][z]
     }
 
     getTileBack(pos, y, z) {
         if (Array.isArray(pos)) {
             return this.tiles[pos[0]][pos[1]][Math.min(this.depth-1, this.depth-pos[2]+1)];
         }
-        return this.tiles[x][y][Math.min(this.depth-1, this.depth-z+1)]
+        return this.tiles[pos][y][Math.min(this.depth-1, this.depth-z+1)]
     }
 
     getTileFront(pos, y, z) {
         if (Array.isArray(pos)) {
             return this.tiles[pos[0]][pos[1]][Math.max(0, this.depth-pos[2]-1)];
         }
-        return this.tiles[x][y][Math.max(0, this.depth-z-1)]
+        return this.tiles[pos][y][Math.max(0, this.depth-z-1)]
     }
 
 }

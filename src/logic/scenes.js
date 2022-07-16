@@ -4,6 +4,7 @@ import GameObject from "./gameobject";
 import { CELL } from './tile';
 import Component from './component';
 import Inputs, { MOUSE_BUTTON } from '../core/inputs';
+import createPlayer from "./prefabs/player";
 
 function level1() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -48,7 +49,7 @@ function level2() {
     indices.forEach(i => tiles[i].type = CELL.OBSTACLE);
     tiles[Math.floor(tiles.length*0.5)].type = CELL.GOAL;
 
-    const objects = [];
+    const objects = [createPlayer(3, 2, 0)];
 
     return {
         tiles: tiles,

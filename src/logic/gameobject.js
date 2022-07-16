@@ -24,6 +24,14 @@ export default class GameObject {
         return new THREE.Color(r / 256, g  / 256, b / 256);
     }
 
+    getComponent(type) {
+        return this.components.find(c => c.type === type);
+    }
+
+    getClickComponent(type) {
+        return this.clicked.find(c => c.type === type);
+    }
+
     setOject3D(obj3d) {
         this.obj3d = obj3d;
     }
