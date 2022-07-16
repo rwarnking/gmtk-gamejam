@@ -17,7 +17,6 @@ export default class TileLevel {
         for (let i = 0; i < width; ++i) {
             this.tiles.push([]);
             // from bottom to top
-            // for (let j = height-1; j >= 0; --j) {
             for (let j = 0; j < height; ++j) {
                 this.tiles[i].push([]);
                 // from front to back
@@ -35,7 +34,11 @@ export default class TileLevel {
         array.forEach(tile => {
             // if not empty
             if (tile.type !== CELL.EMPTY) {
-                const t = this.getTile(tile.position);
+                const t = this.getTile(
+                    tile.position[0],
+                    tile.position[1],
+                    tile.position[2]
+                );
                 // set cell type
                 t.setCellType(tile.type);
                 // set (calculated) 3D position
@@ -139,53 +142,73 @@ export default class TileLevel {
         return mesh;
     }
 
-    getTile(pos, y, z) {
-        if (Array.isArray(pos)) {
-            return this.tiles[pos[0]][pos[1]][pos[2]];
-        }
-        return this.tiles[pos][y][z];
+    getTile(x, y, z) {
+        console.log(x, y, z)
+        return this.tiles[x][y][z];
     }
 
     getTileLeft(pos, y, z) {
         if (Array.isArray(pos)) {
-            return this.tiles[Math.max(0,pos[0]-1)][pos[1]][-pos[2]];
+            y = pos[1];
+            z = pos[2];
         }
-        return this.tiles[Math.max(0,pos-1)][y][z]
+
+        const extra = y % 2 === 1 ? 1 : 0;
+        if (((pos+extra) === 0 || y === this.height-1)) return null;
+
+        return this.getTile(
+            pos - 1 + extra,
+            y + 1,
+            z
+        );
     }
 
     getTileRight(pos, y, z) {
         if (Array.isArray(pos)) {
-            return this.tiles[Math.min(this.width-1,pos[0]+1)][pos[1]][pos[2]];
+            y = pos[1];
+            z = pos[2];
         }
-        return this.tiles[Math.min(this.width-1,pos+1)][y][z]
+
+        const extra = y % 2 === 1 ? 0 : 1;
+        if (((pos-extra) === this.width-1 || y === 0)) return null;
+
+        return this.getTile(
+            pos + 1 - extra,
+            y - 1,
+            z
+        );
     }
 
     getTileUp(pos, y, z) {
         if (Array.isArray(pos)) {
-            return this.tiles[pos[0]][Math.min(this.height-1,pos[1]+1)][pos[2]];
+            y = pos[1];
+            z = pos[2];
         }
-        return this.tiles[pos][Math.min(this.height-1,y+1)][z]
+
+        const extra = y % 2 === 1 ? 0 : 1;
+        if (((pos-extra) === this.width-1 || y === this.height-1)) return null;
+
+        return this.getTile(
+            pos + 1 - extra,
+            y + 1,
+            z
+        );
     }
 
     getTileDown(pos, y, z) {
         if (Array.isArray(pos)) {
-            return this.tiles[pos[0]][Math.max(0,pos[1]-1)][pos[2]];
+            y = pos[1];
+            z = pos[2];
         }
-        return this.tiles[pos][Math.max(0,y-1)][z]
-    }
 
-    getTileBack(pos, y, z) {
-        if (Array.isArray(pos)) {
-            return this.tiles[pos[0]][pos[1]][Math.min(this.depth-1, this.depth-pos[2]+1)];
-        }
-        return this.tiles[pos][y][Math.min(this.depth-1, this.depth-z+1)]
-    }
+        const extra = y % 2 === 1 ? 1 : 0;
+        if (((pos+extra) === 0 || y === 0)) return null;
 
-    getTileFront(pos, y, z) {
-        if (Array.isArray(pos)) {
-            return this.tiles[pos[0]][pos[1]][Math.max(0, this.depth-pos[2]-1)];
-        }
-        return this.tiles[pos][y][Math.max(0, this.depth-z-1)]
+        return this.getTile(
+            pos - 1 + extra,
+            y - 1,
+            z
+        );
     }
 
 }

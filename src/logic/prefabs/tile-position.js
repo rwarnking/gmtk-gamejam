@@ -24,8 +24,7 @@ export default class TilePosition extends Component {
             this.position[1]+0.175,
             this.position[2]
         );
-        this.obj.getObject3D().renderOrder = TileLevel.calcRenderOrder(x, y, z)+1
-        ;
+        this.obj.getObject3D().renderOrder = TileLevel.calcRenderOrder(x, y, z) + 1;
     }
 
     // TODO: !!!!

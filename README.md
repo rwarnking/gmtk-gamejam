@@ -8,9 +8,9 @@
 ## Description
 This project contains our game idea for the GMTK Game Jam 2022.
 
-<!-- <p float="left">
-  <img src="docs/images/gameimage.png" alt="image of the game" width="47%" />
-</p> -->
+<p float="left">
+  <img src="docs/images/latest.png" alt="image of the game" width="27%" />
+</p>
 
 ## Table of Contents
 1. [List of Features](#list-of-features)
@@ -25,7 +25,7 @@ This project contains our game idea for the GMTK Game Jam 2022.
 ## Installation
 
 1. install latest version of Node and npm
-2. run `npm install`
+2. run `npm install` in the top-level directory of this project
 
 ### Dependencies
 
@@ -63,7 +63,7 @@ This project was developed by:
 - [rwarnking](https://github.com/rwarnking)
 - Annalena
 - Ellen
-- Hendrik
+- [HendrikBrueckler](https://github.com/HendrikBrueckler)
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
