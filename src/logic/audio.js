@@ -4,7 +4,6 @@ export default class AudioListener {
 
 
     constructor() {
-
         this.audiolistener = new THREE.AudioListener();
         this.sound = new THREE.Audio(this.audiolistener);
         this.loader = new THREE.AudioLoader();
@@ -12,7 +11,6 @@ export default class AudioListener {
         this.volume = 0.4;
         this.songs =  ['/audio/music2.wav','/audio/music.wav','/audio/music2.wav']
         this.init();
-
     };
 
     init() {

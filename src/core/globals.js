@@ -17,9 +17,7 @@ const GAME = (function() {
 
             audiolistener = new AudioListener();
             audiolistener.changesound();
-            audiolistener.changevolume(0.2);
-
-
+            audiolistener.changevolume(0.05);
         },
 
         audiolistener: function(){

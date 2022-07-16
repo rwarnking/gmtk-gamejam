@@ -115,7 +115,7 @@ jobs:
           files: changelogs/${{ steps.previoustag.outputs.tag }}.md
       # If not create a dummy file
       - name: Create if file does not exist
-        if: ${{ needs.create_tag.outputs.output1 == '1' }} && steps.check_files.outputs.files_exists == 'false'
+        if: ${{ needs.create_tag.outputs.output1 == '1' && steps.check_files.outputs.files_exists == 'false' }}
         uses: "finnp/create-file-action@master"
         env:
           FILE_NAME: changelogs/${{ steps.previoustag.outputs.tag }}.md
