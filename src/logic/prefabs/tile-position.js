@@ -21,9 +21,11 @@ export default class TilePosition extends Component {
         // set 3D position
         this.obj.getObject3D().position.set(
             this.position[0],
-            this.position[1]+0.1, // TODO: remove +0.1, just for testing
+            this.position[1]+0.175,
             this.position[2]
         );
+        this.obj.getObject3D().renderOrder = TileLevel.calcRenderOrder(x, y, z)+1
+        ;
     }
 
     // TODO: !!!!

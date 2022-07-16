@@ -1,6 +1,10 @@
 
 import GAME from './core/globals';
 import Inputs from './core/inputs'
+import Renderer from "./renderer/renderer";
+import SceneManager from "./logic/scenemanager";
+import Logic from "./logic/logic";
+import { level1, level2 } from "./logic/scenes";
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -23,7 +27,12 @@ document.addEventListener("DOMContentLoaded", function() {
         requestAnimationFrame(animate);
     };
 
-    GAME.init();
+    GAME.init(
+        new Renderer(),
+        new SceneManager(),
+        new Logic(),
+        level2
+    );
 
     animate();
 });

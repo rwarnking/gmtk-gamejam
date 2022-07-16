@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Tile,{ CELL } from "../logic/tile";
+import Tile, { CELL } from "../logic/tile";
 
 export default class TileLevel {
 
@@ -45,7 +45,7 @@ export default class TileLevel {
                     tile.position[0],
                     tile.position[1],
                     tile.position[2],
-                    tile.type
+                    tile.type,
                 ));
             }
         });
@@ -68,8 +68,8 @@ export default class TileLevel {
         }
     }
 
-    static renderOrder(x, y, z) {
-        return (this.height-y) * 2;
+    static calcRenderOrder(x, y, z) {
+        return (-y) * 2;
     }
 
     static calculate3DPosition(x, y, z, type=CELL.DEFAULT) {
@@ -134,7 +134,7 @@ export default class TileLevel {
             mesh.material.map.rotation = Math.PI;
         }
         // set the render order
-        mesh.renderOrder = TileLevel.renderOrder(x, y, z); // TODO: +z*2 ??!!
+        mesh.renderOrder = TileLevel.calcRenderOrder(x, y, z); // TODO: +z*2 ??!!
 
         return mesh;
     }

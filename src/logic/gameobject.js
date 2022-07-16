@@ -14,6 +14,8 @@ export default class GameObject {
         // components that should only do sth when
         // the gameobject was clicked on
         this.clicked = [];
+        // some tags, to find stuff easier
+        this.tags = [];
     }
 
     static nextColorID() {
@@ -46,6 +48,18 @@ export default class GameObject {
 
     addClickComponent(handler) {
         this.clicked.push(handler);
+    }
+
+    addTag(tag) {
+        this.tags.push(tag);
+    }
+
+    removeTag(tag) {
+        this.tags = this.tags.fillter(t => t !== tag);
+    }
+
+    hasTag(tag) {
+        return this.tags.includes(tag);
     }
 
     /**

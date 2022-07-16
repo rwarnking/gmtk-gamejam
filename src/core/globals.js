@@ -1,18 +1,18 @@
-import Renderer from "../renderer/renderer";
-import SceneManager from "../logic/scenemanager";
-import { level1, level2 } from "../logic/scenes";
+import TAGS from "../logic/enums/tags";
 
 const GAME = (function() {
 
-    let renderer, smgr, scene;
+    let renderer, smgr, scene, logic;
 
     return {
 
-        init: function() {
-            renderer = new Renderer();
+        init: function(render, scenemgr, log, level) {
+            renderer = render;
             renderer.setupRenderer();
-            smgr = new SceneManager();
-            scene = smgr.setupScene(level2());
+            smgr = scenemgr
+            logic = log;
+            scene = smgr.setupScene(level());
+            logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
         },
 
         renderer: function() {
@@ -28,7 +28,11 @@ const GAME = (function() {
         },
 
         tileLevel: function() {
-            return smgr.tileLevel
+            return smgr.tileLevel;
+        },
+
+        logic: function() {
+            return logic;
         }
 
     }

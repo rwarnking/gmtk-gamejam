@@ -1,4 +1,6 @@
 import GameObject from "./gameobject";
+import GAME from "../core/globals";
+import MODS from "./enums/mods";
 
 const CELL = Object.freeze({
     EMPTY: -1,
@@ -8,10 +10,6 @@ const CELL = Object.freeze({
     GOAL: 3,
     START: 4
 });
-const TILE_MODS = Object.freeze({
-    PLAYER: 0,
-    ENEMY: 1,
-});
 
 class Tile extends GameObject {
 
@@ -20,6 +18,7 @@ class Tile extends GameObject {
         // position in the grid as array
         this.position = position;
         this.cell = celltype;
+        this.mods = [];
     }
 
     setCellType(type) {
@@ -46,6 +45,20 @@ class Tile extends GameObject {
         return !this.isCellType(CELL.OBSTACLE) & !this.isCellType(CELL.ENEMY);
     }
 
+    addModifier(mod) {
+        this.mods.push(mod);
+        if (this.cell === CELL.GOAL && mod === MODS.PLAYER) {
+            GAME.logic().setGoalReached(true);
+        }
+    }
+
+    removeModifier(mod) {
+        this.mods = this.mods.filter(m => m !== mod);
+        if (this.cell === CELL.GOAL && mod === MODS.PLAYER) {
+            GAME.logic().setGoalReached(false);
+        }
+    }
+
 }
 
-export { Tile as default, CELL, TILE_MODS }
+export { Tile as default, CELL }
