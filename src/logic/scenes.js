@@ -4,21 +4,22 @@ import GameObject from "./gameobject";
 import { CELL } from './tile';
 import Component from './component';
 import Inputs, { MOUSE_BUTTON } from '../core/inputs';
-import createButton from './prefabs/button';
 
 function level1() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
     const obj = new GameObject(cube);
-    obj.addComponent(new Component(obj, function(obj, delta) {
-        let speed = Inputs.isKeyDown("KeyP") ? 0.005 : 0.001;
-        const obj3d = obj.getObject3D();
-        if (Inputs.isMouseButtonDown(MOUSE_BUTTON.LEFT)) {
-            obj3d.material.color.setHex(0x00ffff);
-        } else {
-            obj3d.material.color.setHex(0x00ff00);
+    obj.addClickComponent(new Component(obj, function(obj, button) {
+        if (button === MOUSE_BUTTON.LEFT) {
+            obj.toggle = obj.toggle === undefined ? true : !obj.toggle;
+            const obj3d = obj.getObject3D();
+            obj3d.material.color.setHex(toggle ? 0x00ffff : 0x00ff00);
         }
+    }));
+    obj.addComponent(new Component(obj, function(obj, delta) {
+        const speed = Inputs.isKeyDown("KeyP") ? 0.005 : 0.001;
+        const obj3d = obj.getObject3D();
         obj3d.rotation.x += speed * delta;
         obj3d.rotation.y += speed * delta;
     }));

@@ -18,6 +18,11 @@ export default class Renderer {
         if (this.renderer) {
             this.renderer.setSize(this.width, this.height);
         }
+        if (this.camera) {
+            // TODO: not sure if this line is necessary
+            this.camera.aspect = width / height;
+            this.camera.updateProjectionMatrix();
+        }
     }
 
     setupRenderer() {
