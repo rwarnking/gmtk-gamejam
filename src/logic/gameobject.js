@@ -1,13 +1,12 @@
 import * as THREE from 'three';
-import { v4 as uuidv4 } from 'uuid';
 
-let colorid = 0;
+let colorid = 1;
 
 export default class GameObject {
 
     constructor(object3d) {
-        this.id = uuidv4();
-        this.colorid = GameObject.nextColorID();
+        this.id = GameObject.nextColorID();
+        this.pickingColor = GameObject.idToColor(this.id);
         this.obj3d = object3d;
         // components that should be called each frame
         this.components = [];
@@ -19,11 +18,16 @@ export default class GameObject {
     }
 
     static nextColorID() {
-        const r = (colorid >> 16) % 256;   // red
-        const g = (colorid >> 8) % 256;    // green
-        const b = colorid % 256;           // blue
-        colorid++;
-        return new THREE.Color(r / 256, g  / 256, b / 256);
+        const val = colorid;
+        colorid+=1; // TODO: change to increment of 1
+        return val;
+    }
+
+    static idToColor(id) {
+        const r = id % 256;   // red
+        const g = (id >> 8) % 256;    // green
+        const b = (id >> 16) % 256;           // blue
+        return new THREE.Color(r / 255, g  / 255, b / 255);
     }
 
     getComponent(type) {
@@ -74,6 +78,7 @@ export default class GameObject {
     }
 
     onClick(button) {
+        console.log("GameObject " + this.id + " was clicked")
         this.clicked.forEach(c => c.call(button));
     }
 }

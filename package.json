@@ -29,8 +29,7 @@
     "cash-dom": "^8.1.1",
     "chance": "^1.1.8",
     "rollup": "^2.76.0",
-    "three": "^0.142.0",
-    "uuid": "^8.3.2"
+    "three": "^0.142.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.1",

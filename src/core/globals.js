@@ -44,7 +44,11 @@ const GAME = (function() {
 
         logic: function() {
             return logic;
-        }
+        },
+
+        pickingScene: function() {
+            return smgr.pickingScene;
+        },
 
     }
 }());
