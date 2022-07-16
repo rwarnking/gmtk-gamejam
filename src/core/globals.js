@@ -1,6 +1,6 @@
 import Renderer from "../renderer/renderer";
 import SceneManager from "../logic/scenemanager";
-import { level3 } from "../logic/scenes";
+import { level2 } from "../logic/scenes";
 
 const GAME = (function() {
 
@@ -12,7 +12,7 @@ const GAME = (function() {
             renderer = new Renderer();
             renderer.setupRenderer();
             smgr = new SceneManager();
-            scene = smgr.setupScene(level3);
+            scene = smgr.setupScene(level2());
         },
 
         renderer: function() {
