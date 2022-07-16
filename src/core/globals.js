@@ -1,8 +1,9 @@
 import TAGS from "../logic/enums/tags";
+import AudioListener from "../logic/audio";
 
 const GAME = (function() {
 
-    let renderer, smgr, scene, logic;
+    let renderer, smgr, scene, logic, audiolistener;
 
     return {
 
@@ -13,6 +14,16 @@ const GAME = (function() {
             logic = log;
             scene = smgr.setupScene(level());
             logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
+
+            audiolistener = new AudioListener();
+            audiolistener.changesound();
+            audiolistener.changevolume(0.2);
+
+
+        },
+
+        audiolistener: function(){
+            return audiolistener;
         },
 
         renderer: function() {
