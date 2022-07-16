@@ -97,26 +97,20 @@ export default class TileLevel {
             case CELL.GOAL: {
                 height = 0.5;
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
-                // TODO: remove (LETICIA)
-                texture = new THREE.TextureLoader().load('assets/sprites/floor.png');
-                // TODO: include (LETICIA)
-                // texture = new THREE.TextureLoader().load(
-                //     'assets/sprites/rainbow-goal_128x64_t.png'
-                // );
+                texture = new THREE.TextureLoader().load(
+                    'assets/sprites/rainbow-goal_128x64_t.png'
+                );
             } break;
             default: {
                 height = 0.5;
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
                 const gras = Math.random() > 0.65;
                 rotate = Math.random() > 0.5;
-                // TODO: remove (LETICIA)
-                texture = new THREE.TextureLoader().load('assets/sprites/floor.png');
-                // TODO: include (LETICIA)
-                // texture = new THREE.TextureLoader().load(
-                //     gras ?
-                //         'assets/sprites/dirt-gras_128x64_t.png' :
-                //         'assets/sprites/stone-cracks_128x64_t.png'
-                // );
+                texture = new THREE.TextureLoader().load(
+                    gras ?
+                        'assets/sprites/dirt-gras_128x64_t.png' :
+                        'assets/sprites/stone-cracks_128x64_t.png'
+                );
             } break;
         }
 

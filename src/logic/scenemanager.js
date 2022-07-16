@@ -23,6 +23,8 @@ export default class SceneManager {
         );
         // add the tiles' gameobject3d to our list of objects
         this.tileLevel.forEach(t => this.addGameObject(t));
+        // add other objects that are not tiles
+        level.objects.forEach(o => this.addGameObject(o))
         // return the scene
         return this.scene;
     }
