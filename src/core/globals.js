@@ -1,6 +1,6 @@
 import Renderer from "../renderer/renderer";
 import SceneManager from "../logic/scenemanager";
-import { level2 } from "../logic/scenes";
+import { level1, level2 } from "../logic/scenes";
 
 const GAME = (function() {
 
