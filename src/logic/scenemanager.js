@@ -87,7 +87,6 @@ export default class SceneManager {
         if (index >= 0 && index < LEVELS.length) {
             this.level = index;
             const levelData = LEVELS[this.level]();
-            console.log(levelData);
             this.setupScene(levelData);
             return levelData;
         }

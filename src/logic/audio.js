@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 
-export default class AudioListener {
+// const PEFIX = "dist/";
 
+export default class AudioListener {
 
     constructor() {
         this.audiolistener = new THREE.AudioListener();
@@ -9,7 +10,7 @@ export default class AudioListener {
         this.loader = new THREE.AudioLoader();
         this.songnum = 0;
         this.volume = 0.05;
-        this.songs =  ['/audio/music2.wav','/audio/music.wav','/audio/music2.wav']
+        this.songs =  ['audio/music2.wav','audio/music.wav','audio/music2.wav']
         this.bumpsound = new THREE.Audio(this.audiolistener);
         this.rollsound = new THREE.Audio(this.audiolistener);
         this.winsound = new THREE.Audio(this.audiolistener);
@@ -29,7 +30,7 @@ export default class AudioListener {
         });
 
         this.loader2 = new THREE.AudioLoader();
-        this.loader2.load('/audio/stop.wav', buffer => {
+        this.loader2.load('audio/stop.wav', buffer => {
             this.bumpsound.setBuffer(buffer);
             this.bumpsound.setLoop(false);
             this.bumpsound.setVolume(this.effectsoundvolume);
@@ -37,7 +38,7 @@ export default class AudioListener {
 
         this.loader3 = new THREE.AudioLoader();
         let dicevol;
-        this.loader3.load('/audio/dice_1.mp3', buffer => {
+        this.loader3.load('audio/dice_1.mp3', buffer => {
             this.rollsound.setBuffer(buffer);
             this.rollsound.setLoop(false);
             if(this.effectsoundvolume>0){
@@ -49,21 +50,21 @@ export default class AudioListener {
         });
 
         this.loader4 = new THREE.AudioLoader();
-        this.loader4.load('/audio/winfantasia_short.mp3', buffer => {
+        this.loader4.load('audio/winfantasia_short.mp3', buffer => {
             this.winsound.setBuffer(buffer);
             this.winsound.setLoop(false);
             this.winsound.setVolume(this.effectsoundvolume);
         });
 
         this.loader5 = new THREE.AudioLoader();
-        this.loader5.load('/audio/number_collect.mp3', buffer => {
+        this.loader5.load('audio/number_collect.mp3', buffer => {
             this.collectsound.setBuffer(buffer);
             this.collectsound.setLoop(false);
             this.collectsound.setVolume(this.effectsoundvolume);
         });
 
         this.loader6 = new THREE.AudioLoader();
-        this.loader6.load('/audio/nonwin.mp3', buffer => {
+        this.loader6.load('audio/nonwin.mp3', buffer => {
             this.nonwinsound.setBuffer(buffer);
             this.nonwinsound.setLoop(false);
             this.nonwinsound.setVolume(this.effectsoundvolume);
