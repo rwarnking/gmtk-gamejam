@@ -9,7 +9,7 @@ export default class AudioListener {
         this.sound = new THREE.Audio(this.audiolistener);
         this.loader = new THREE.AudioLoader();
         this.songnum = 0;
-        this.volume = 0.05;
+        this.volume = 0.07;
         this.songs =  ['audio/music2.wav','audio/music.wav','audio/music2.wav']
         this.bumpsound = new THREE.Audio(this.audiolistener);
         this.rollsound = new THREE.Audio(this.audiolistener);

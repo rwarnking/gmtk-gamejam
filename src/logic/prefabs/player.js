@@ -49,7 +49,7 @@ function createPlayer(x, y, z, startNumber) {
         let flip = false;
         const currTile = tl.getTile(tc.x, tc.y, tc.z);
         // otherwise, check if we can move to the next tile
-        if (Inputs.isKeyDown("ArrowUp")) {
+        if (Inputs.isKeyDown("KeyW")) {
             tile = tl.getTileUp(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go up
@@ -59,7 +59,7 @@ function createPlayer(x, y, z, startNumber) {
             } else {
                 GAME.audiolistener().playbump();
             }
-        } else if (Inputs.isKeyDown("ArrowDown")) {
+        } else if (Inputs.isKeyDown("KeyS")) {
             tile = tl.getTileDown(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go down
@@ -70,7 +70,7 @@ function createPlayer(x, y, z, startNumber) {
             } else {
                 GAME.audiolistener().playbump();
             }
-        } else if (Inputs.isKeyDown("ArrowRight")) {
+        } else if (Inputs.isKeyDown("KeyD")) {
             tile = tl.getTileRight(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go right
@@ -80,7 +80,7 @@ function createPlayer(x, y, z, startNumber) {
             } else {
                 GAME.audiolistener().playbump();
             }
-        } else if (Inputs.isKeyDown("ArrowLeft")) {
+        } else if (Inputs.isKeyDown("KeyA")) {
             tile = tl.getTileLeft(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go left
