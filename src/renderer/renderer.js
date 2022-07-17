@@ -29,7 +29,8 @@ export default class Renderer {
     setupRenderer() {
         this.camera = new THREE.PerspectiveCamera( 75, this.width / this.height, 0.1, 1000 );
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.sortObjects = false;
+        // WHYYYYY
+        // this.renderer.sortObjects = false;
         this.renderer.setSize(this.width, this.height);
         document.body.appendChild(this.renderer.domElement);
 

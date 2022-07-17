@@ -9,37 +9,51 @@ export default class NumberTile extends Component {
         super(obj, null, null, "NumberTile");
         this.n = n;
         this.direction = null;
-        this.prevTexture = obj.getObject3D().material.map;
+        this.topping = NumberTile.makeTopping(n);
+        const objpos = obj.getObject3D().position;
+        this.topping.position.set(
+            objpos.x,
+            objpos.y,
+            objpos.z,
+        );
+        this.topping.renderOrder = obj.getObject3D().renderOrder;
+
         obj.addTag(TAGS.DICE_NUMBER);
-        this.updateTexture();
+        const tex = new THREE.TextureLoader().load(
+            'assets/sprites/dirt-gras_128x64_t.png'
+        );
+        obj.getObject3D().material.map = tex;
+        obj.getObject3D().material.needsUpdate = true
     }
 
     static create(obj, n) {
         return new NumberTile(obj, n);
     }
 
-    updateTexture() {
-        switch (this.n) {
-            case null: {
-                this.obj.getObject3D().material.map = this.prevTexture;
-            } break;
-            default: {
-                const tex = new THREE.TextureLoader().load(
-                    'assets/sprites/dirt-gras_128x64_t.png'
-                );
-                this.obj.getObject3D().material.map = tex;
-                this.obj.getObject3D().material.needsUpdate = true;
-            } break;
-        }
+    static makeTopping(n) {
+        const texture = new THREE.TextureLoader().load(
+            `assets/sprites/numbers/${n}.png`
+        );
+        const geometry = new THREE.PlaneGeometry(1, 0.5);
+        const material = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true
+        })
+        const plane = new THREE.Mesh(geometry, material);
+        return plane;
     }
 
     onEnter() {
         // player has entered this field and we can collect the number
         if (this.canCollect()) {
             GAME.logic().addNumberDirect(this.n);
-            this.n = null;
-            this.updateTexture();
+            this.collect();
         }
+    }
+
+    collect() {
+        this.n = null;
+        this.topping.removeFromParent();
     }
 
     canCollect() {

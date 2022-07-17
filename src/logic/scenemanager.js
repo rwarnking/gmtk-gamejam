@@ -49,16 +49,24 @@ export default class SceneManager {
         // add the tiles' gameobject3d to our list of objects
         this.ui.forEach(ui => this.addUIElement(ui, scene));
 
-        const bgObj = this.objects.find(o => o.hasTag(TAGS.BACKGROUND));
-        this.bgObj = bgObj ? bgObj.getComponent("TextureCycle") : null;
-        this.setBackground(scene);
+        this.bgObj = null;
 
-        // add dice planes
-        const player = this.objects.find(o => o.hasComponent("Dice"));
-        if (player) {
-            const dice = player.getComponent("Dice")
-            dice.getPlanes().forEach(p => this.scene.add(p));
-        }
+        this.objects.forEach(o => {
+            if (o.hasComponent("Dice")) {
+                // add dice planes
+                const dice = o.getComponent("Dice");
+                dice.getPlanes().forEach(p => scene.add(p));
+            } else if (o.hasComponent("NumberTile")) {
+                // add number tile stuff
+                const nt = o.getComponent("NumberTile");
+                scene.add(nt.topping);
+            } else if (o.hasTag(TAGS.BACKGROUND)) {
+                // if we have a fancier background
+                this.bgObj = o.getComponent("TextureCycle");
+            }
+        })
+
+        this.setBackground(scene);
     }
 
     setBackground(scene) {

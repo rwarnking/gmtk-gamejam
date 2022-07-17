@@ -3,6 +3,7 @@ import Component from "../logic/component";
 import TextureCycle from "../logic/prefabs/texture-cycle";
 import UIElement from "../logic/prefabs/ui-element";
 import GAME from "./globals";
+import Inputs from "./inputs";
 
 const UI_POSITIONS = [
     // [-2.0, 3.0],
@@ -47,7 +48,10 @@ export default class UI {
         fairy.life = maxLife;
         fairy.one = false;
         const killComp = new Component(fairy, function(_, delta) {
+            if (fairy.life <= 0) return;
+
             fairy.life -= delta;
+
             if (!fairy.once && fairy.life <= maxLife * 0.5) {
                 fairy.once = true;
                 fairy.getObject3D().material.map = new THREE.TextureLoader().load("assets/sprites/fairy2wasd.png")
@@ -55,8 +59,16 @@ export default class UI {
                 const frac = fairy.life / threshold;
                 fairy.getObject3D().material.opacity = frac;
                 if (frac <= 0) {
-                    fairy.getObject3D().visible = false;
+                    fairy.getObject3D().removeFromParent();
                 }
+            }
+
+            if (Inputs.isKeyDown("KeyW") || Inputs.isKeyDown("KeyA")
+            || Inputs.isKeyDown("KeyS") || Inputs.isKeyDown("KeyD")
+            ) {
+                fairy.getObject3D().removeFromParent();
+                fairy.dead = true;
+                fairy.life = 0;
             }
         })
         fairy.addComponent(killComp);
