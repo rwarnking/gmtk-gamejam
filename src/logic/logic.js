@@ -1,3 +1,5 @@
+import GAME from "../core/globals";
+
 export default class Logic {
 
     constructor() {
@@ -38,12 +40,14 @@ export default class Logic {
         this.goalReached = value;
         console.log(value ? "goal reached" : "goal left");
         if (value && !this.isOver()) {
+            GAME.audiolistener().playnowin();
             console.log("still missing numbers");
         }
     }
 
     addNumber(n) {
         this.numbersCollected.add(n);
+        GAME.audiolistener().playcollect();
         console.log("number " + n + " has been added to the dice");
     }
 
@@ -58,5 +62,6 @@ export default class Logic {
 
     isOver() {
         return this.goalReached && this.hasAllNumbers();
+        
     }
 }

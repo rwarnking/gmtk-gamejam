@@ -12,6 +12,7 @@ import TAGS from "../enums/tags";
 import MODS from '../enums/mods';
 import DIRECTION from '../enums/direction';
 
+
 function createPlayer(x, y, z, h) {
 
     const texture = new THREE.TextureLoader().load(
@@ -55,6 +56,8 @@ function createPlayer(x, y, z, h) {
                 move = true;
                 dir = DIRECTION.UP;
                 flip = true;
+            } else {
+                GAME.audiolistener().playbump();
             }
         } else if (Inputs.isKeyDown("ArrowDown")) {
             tile = tl.getTileDown(tc.x, tc.y, tc.z);
@@ -64,6 +67,8 @@ function createPlayer(x, y, z, h) {
                 dir = DIRECTION.DOWN;
                 backwards = true;
                 flip = true;
+            } else {
+                GAME.audiolistener().playbump();
             }
         } else if (Inputs.isKeyDown("ArrowRight")) {
             tile = tl.getTileRight(tc.x, tc.y, tc.z);
@@ -72,6 +77,8 @@ function createPlayer(x, y, z, h) {
                 move = true;
                 backwards = true;
                 dir = DIRECTION.RIGHT;
+            } else {
+                GAME.audiolistener().playbump();
             }
         } else if (Inputs.isKeyDown("ArrowLeft")) {
             tile = tl.getTileLeft(tc.x, tc.y, tc.z);
@@ -79,6 +86,8 @@ function createPlayer(x, y, z, h) {
                 // go left
                 move = true;
                 dir = DIRECTION.LEFT;
+            } else {
+                GAME.audiolistener().playbump();
             }
         }
 
@@ -86,7 +95,8 @@ function createPlayer(x, y, z, h) {
             obj.getComponent("TextureCycle").setAnimate(backwards, flip);
             currTile.removeModifier(MODS.PLAYER);
             tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
-            tile.addModifier(MODS.PLAYER)
+            tile.addModifier(MODS.PLAYER);
+            GAME.audiolistener().playroll();
         }
     }));
 
