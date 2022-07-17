@@ -70,7 +70,7 @@ export default class TileLevel {
         switch (type) {
             case CELL.OBSTACLE: return [
                 y % 2 == 0 ? -2 + x : -1.5 + x,
-                -2 + y * 0.25 * 0.75 + 0.2,
+                -2 + y * 0.25 * 0.75 + 0.25,
                 z
             ]
             default: return [
@@ -86,10 +86,20 @@ export default class TileLevel {
 
         switch (type) {
             case CELL.OBSTACLE: {
-                height = 0.75;
+                height = 1.0;
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
+
+                const texArray = [
+                    'assets/sprites/obstacle_128x127_t.png',
+                    'assets/sprites/rock-cracks_128x127_t.png',
+                    'assets/sprites/stone_128x127_t.png',
+                    'assets/sprites/water_128x127_t.png',
+                ];
+
+                const tex = Math.floor(Math.random() * texArray.length);
+                rotate = Math.random() > 0.5;
                 texture = new THREE.TextureLoader().load(
-                    'assets/sprites/obstacle_128x127_t.png'
+                    texArray[tex]
                 );
             } break;
             case CELL.GOAL: {
@@ -100,12 +110,17 @@ export default class TileLevel {
             } break;
             default: {
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
-                const gras = Math.random() > 0.65;
+                const texArray = [
+                    'assets/sprites/full-gras_128x64_t.png',
+                    'assets/sprites/stone-cracks_128x64_t.png',
+                    'assets/sprites/rock-cracks_128x64_t.png',
+                    'assets/sprites/flower-gras_128x64_t.png'
+                ];
+
+                const tex = Math.floor(Math.random() * texArray.length);
                 rotate = Math.random() > 0.5;
                 texture = new THREE.TextureLoader().load(
-                    gras ?
-                        'assets/sprites/full-gras_128x64_t.png' :
-                        'assets/sprites/stone-cracks_128x64_t.png'
+                    texArray[tex]
                 );
             } break;
         }

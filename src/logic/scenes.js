@@ -271,4 +271,76 @@ function level4() {
     };
 }
 
-export { level1, level2, level3, level4 };
+function level5() {
+    const a = 8, b = 7;
+    const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
+    const tiles = makeTileRect(a, b);
+
+    const chance = new Chance();
+    const allIdx = [...Array(a*b).keys()];
+    const idx = chance.pickset(allIdx, 3)
+    const idxObstacle = chance.pickset(allIdx.filter(i => !idx.includes(i)), 2);
+
+    tiles[6].addComponent(GoalTile.create(tiles[6]));
+    tiles[50].addComponent(NumberTile.create(tiles[50], 1));
+    tiles[51].addComponent(NumberTile.create(tiles[51], 2));
+    tiles[52].addComponent(NumberTile.create(tiles[52], 3));
+    tiles[53].addComponent(NumberTile.create(tiles[53], 4));
+    tiles[54].addComponent(NumberTile.create(tiles[54], 5));
+
+    tiles[7].addComponent(NumberTile.create(tiles[7], 6));
+    tiles[14].addComponent(NumberTile.create(tiles[14], 1));
+    tiles[21].addComponent(NumberTile.create(tiles[21], 2));
+    tiles[28].addComponent(NumberTile.create(tiles[28], 3));
+    tiles[35].addComponent(NumberTile.create(tiles[35], 4));
+    tiles[42].addComponent(NumberTile.create(tiles[42], 5));
+
+    tiles[7].addComponent(NumberTile.create(tiles[13], 5));
+    tiles[14].addComponent(NumberTile.create(tiles[20], 4));
+    tiles[21].addComponent(NumberTile.create(tiles[27], 3));
+    tiles[28].addComponent(NumberTile.create(tiles[34], 2));
+    tiles[35].addComponent(NumberTile.create(tiles[41], 1));
+    tiles[42].addComponent(NumberTile.create(tiles[48], 6));
+
+    tiles[1].addComponent(NumberTile.create(tiles[1], 5));
+    tiles[2].addComponent(NumberTile.create(tiles[2], 4));
+    tiles[3].addComponent(NumberTile.create(tiles[3], 3));
+    tiles[4].addComponent(NumberTile.create(tiles[4], 2));
+    tiles[5].addComponent(NumberTile.create(tiles[5], 1));
+    const startPos = tiles[49].getTilePosition();
+
+    setTileToWater(tiles[0]);
+    setTileToWater(tiles[8]);
+    setTileToWater(tiles[12]);
+    setTileToWater(tiles[16]);
+    setTileToWater(tiles[18]);
+    setTileToWater(tiles[24]);
+    setTileToWater(tiles[31]);
+    setTileToWater(tiles[37]);
+    setTileToWater(tiles[39]);
+    setTileToWater(tiles[43]);
+    setTileToWater(tiles[47]);
+    setTileToWater(tiles[55]);
+
+    const objects = [
+        createPlayer(startPos[0], startPos[1], startPos[2]),
+        createBackground()
+    ];
+
+    return {
+        tiles: tiles,
+        objects: objects,
+        width: w,
+        height: h,
+        depth: 1,
+        settings: {
+            startNumbers: [1],
+            goalNumbers: [1, 2, 3, 4, 5, 6],
+            constraints: [
+                CONSTRAINTS.LIKE_REAL_DICE
+            ] // TODO: ?!
+        }
+    };
+}
+
+export { level1, level2, level3, level4, level5 };
