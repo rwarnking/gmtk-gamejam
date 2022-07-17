@@ -10,18 +10,52 @@ import MODS from '../enums/mods';
 function createPlayer(x, y, z, h) {
 
     const texture = new THREE.TextureLoader().load(
-        'assets/sprites/dice_128x127_t.png'
+        'assets/3dplayertex.png'
     );
-    const geometry = new THREE.PlaneGeometry(0.75, 0.75);
+
+    // const geometry = new THREE.PlaneGeometry(75, 75);
+    // const material = new THREE.MeshBasicMaterial({
+    //     map: texture,
+    //     transparent: true,
+    // });
+
+    const geometry = new THREE.BoxGeometry(50, 50, 50);
+    // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const material = new THREE.MeshBasicMaterial({
         map: texture,
-        transparent: true,
+        // transparent: true,
     });
     const cube = new THREE.Mesh(geometry, material);
     const obj = new GameObject(cube);
     obj.addTag(TAGS.PLAYER);
 
     const tl = GAME.tileLevel();
+
+    cube.rotation.y = Math.PI * 0.25;
+    cube.rotation.x = Math.PI * 0.125;
+
+    obj.addComponent(new Component(obj, function(obj, delta) {
+        const obj3d = obj.getObject3D();
+        // top left
+        // obj3d.position.x -= 0.01 * delta * 1.5;
+        // obj3d.position.y += 0.00375 * delta * 1.5;
+        // obj3d.rotateX( -0.005 );
+
+        // top right
+        // obj3d.position.x += 0.01 * delta * 1.5;
+        // obj3d.position.y += 0.00375 * delta * 1.5;
+        // obj3d.rotateZ( -0.005 );
+
+        // bot left
+        // obj3d.position.x -= 0.01 * delta * 1.5;
+        // obj3d.position.y -= 0.00375 * delta * 1.5;
+        // obj3d.rotateZ( 0.005 );
+
+        // bot left
+        obj3d.position.x += 0.01 * delta * 1.5;
+        obj3d.position.y -= 0.00375 * delta * 1.5;
+        obj3d.rotateX( 0.005 );
+    }));
 
     // add tile position component
     obj.addComponent(TilePosition.create(

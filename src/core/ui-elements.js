@@ -9,9 +9,9 @@ export default class UIElements {
 
     init() {
         let UIPositions = [
-            [-2.0, 3.0],
-            [-1.0, 3.0],
-            [+2.0, 3.0],
+            [-2.0 * 100.0, 3.0 * 100.0],
+            [-1.0 * 100.0, 3.0 * 100.0],
+            [+2.0 * 100.0, 3.0 * 100.0],
         ]
 
         UIPositions.forEach(pos => {
@@ -37,7 +37,7 @@ export default class UIElements {
             'assets/sprites/obstacle_01.png'
         );
 
-        const geometry = new THREE.PlaneGeometry(1, 1);
+        const geometry = new THREE.PlaneGeometry(100, 100);
         const material = new THREE.MeshBasicMaterial({
             map: texture,
             transparent: true,

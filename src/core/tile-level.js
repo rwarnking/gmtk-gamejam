@@ -72,20 +72,23 @@ export default class TileLevel {
     }
 
     static calcRenderOrder(x, y, z) {
-        return (-y) * 2;
+        return (-y) * 2 * 100;
     }
 
     static calculate3DPosition(x, y, z, type=CELL.DEFAULT) {
+        const scale = 100; // TODO save this elsewhere
         switch (type) {
             case CELL.OBSTACLE: return [
-                y % 2 == 0 ? -2 + x : -1.5 + x,
-                -2 + y * 0.25 * 0.75 + 0.5 * 0.75,
-                z
+                y % 2 == 0 ? (-2 + x) * scale : (-1.5 + x) * scale,
+                (-2 + y * 0.25 * 0.75 + 0.5 * 0.75) * scale,
+                -scale // TODO z no used
             ]
             default: return [
-                y % 2 == 0 ? -2 + x : -1.5 + x,
-                -2 + y * 0.25 * 0.75,
-                z
+                y % 2 == 0 ?
+                    (-2 + x) * scale :
+                    (-1.5 + x) * scale,
+                -2 * scale + y * 0.25 * 0.75 * scale,
+                -scale // TODO z no used
             ];
         }
     }
@@ -121,7 +124,7 @@ export default class TileLevel {
             } break;
         }
 
-        const geometry = new THREE.PlaneGeometry(1, height);
+        const geometry = new THREE.PlaneGeometry(100, height*100);
         const material = new THREE.MeshBasicMaterial({
             map: texture,
             transparent: true,
@@ -143,7 +146,6 @@ export default class TileLevel {
     }
 
     getTile(x, y, z) {
-        console.log(x, y, z)
         return this.tiles[x][y][z];
     }
 
