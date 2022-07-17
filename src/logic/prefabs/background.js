@@ -18,7 +18,8 @@ export default function createBackground() {
             "assets/background/7.png",
             "assets/background/8.png",
         ],
-        10000
+        10000 * 8,
+        false,
     ));
 
     return obj;

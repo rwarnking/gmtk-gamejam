@@ -62,8 +62,8 @@ export default class TileLevel {
         }
     }
 
-    static calcRenderOrder(x, y, z) {
-        return (-y) * 2;
+    static calcRenderOrder(x, y, z, h=1000) {
+        return (h-y) * 2;
     }
 
     static calculate3DPosition(x, y, z, type=CELL.DEFAULT) {

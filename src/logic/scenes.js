@@ -11,6 +11,8 @@ import NumberTile from './prefabs/number-tile';
 import GoalTile from './prefabs/goal-tile';
 import createBackground from './prefabs/background';
 
+import CONSTRAINTS from "./enums/constraints"
+
 function makeTileRect() {
     const tiles = [];
     tiles.push({
@@ -86,7 +88,7 @@ function level2() {
     const tiles = [];
     const chance = new Chance();
     const allIdx = [...Array(w*h).keys()];
-    const idx = chance.pickset(allIdx, 2)
+    const idx = chance.pickset(allIdx, 3)
     const idxObstacle = chance.pickset(allIdx.filter(i => !idx.includes(i)), 2);
 
     for (let i = 0; i < w; ++i) {
@@ -104,9 +106,10 @@ function level2() {
     }
     tiles[idx[0]].addComponent(GoalTile.create(tiles[idx[0]]));
     tiles[idx[1]].addComponent(NumberTile.create(tiles[idx[1]], 6));
+    const startPos = tiles[idx[2]].getTilePosition();
 
     const objects = [
-        createPlayer(1, 2, 0),
+        createPlayer(startPos[0], startPos[1], startPos[2]),
         createBackground()
     ];
 
@@ -119,7 +122,9 @@ function level2() {
         settings: {
             startNumbers: [1],
             goalNumbers: [1,6],
-            constraints: [] // TODO: ?!
+            constraints: [
+                CONSTRAINTS.LIKE_REAL_DICE
+            ] // TODO: ?!
         }
     };
 }
