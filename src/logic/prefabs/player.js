@@ -42,7 +42,8 @@ function createPlayer(x, y, z, h) {
         // early return if we are still in the process of moving
         if (tc.isMoving) return;
 
-        let tile, move = false, dir;
+        let tile = null;
+        let move = false, dir;
         const currTile = tl.getTile(tc.x, tc.y, tc.z);
         // otherwise, check if we can move to the next tile
         if (Inputs.isKeyDown("ArrowUp")) {
@@ -76,9 +77,9 @@ function createPlayer(x, y, z, h) {
         }
 
         if (move) {
-            this.obj.getComponent("TextureCycle").setAnimate();
+            obj.getComponent("TextureCycle").setAnimate();
             currTile.removeModifier(MODS.PLAYER);
-            tc.move(tile.getTilePosition(), dir);
+            tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
             tile.addModifier(MODS.PLAYER)
         }
     }));

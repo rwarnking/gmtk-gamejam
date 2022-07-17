@@ -62,7 +62,7 @@ export default class TileLevel {
         }
     }
 
-    static calcRenderOrder(x, y, z, h=1000) {
+    static calcRenderOrder(x, y, z, h=200) {
         return (h-y) * 2;
     }
 

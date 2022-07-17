@@ -12,15 +12,16 @@ export default class TilePosition extends Component {
         this.count = 1;
         this.direction = DIRECTION.NONE;
         this.position = new THREE.Vector3(0,0,0);
+        this.renderOrder = TileLevel.calcRenderOrder(
+            this.x, this.y, this.z
+        ) - 1;
         this.setPosition(x, y, z);
         this.obj.getObject3D().position.set(
             this.position.x,
             this.position.y,
             this.position.z,
         );
-        this.obj.getObject3D().renderOrder = TileLevel.calcRenderOrder(
-            this.x, this.y, this.z
-        );
+        this.obj.getObject3D().renderOrder = this.renderOrder;
     }
 
     static create(obj, x, y, z, duration) {
@@ -40,11 +41,7 @@ export default class TilePosition extends Component {
                 } else if (this.count === Math.floor(this.duration * 0.5) &&
                     (this.direction === DIRECTION.UP || this.direction === DIRECTION.LEFT)
                 ) {
-                    obj.getObject3D().renderOrder = TileLevel.calcRenderOrder(
-                        this.x, this.y, this.z
-                    );
-                    console.log(this.obj.getObject3D().renderOrder);
-
+                    obj.getObject3D().renderOrder = this.renderOrder;
                 }
             }
         }, duration);
@@ -61,17 +58,14 @@ export default class TilePosition extends Component {
         this.position.z = pos[2]
 
         if (this.isMoving && (this.direction === DIRECTION.DOWN || this.direction === DIRECTION.RIGHT)) {
-            this.obj.getObject3D().renderOrder = TileLevel.calcRenderOrder(
-                this.x, this.y, this.z
-            );
+            this.obj.getObject3D().renderOrder = this.renderOrder;
         }
-        console.log(this.obj.getObject3D().renderOrder);
     }
 
-    move(pos, y, z, direction, callback) {
+    move(direction, pos, renderOrder) {
         this.isMoving = true;
         this.direction = direction;
-        this.callback = callback;
+        this.renderOrder = renderOrder;
         if (Array.isArray(pos)) {
             this.setPosition(pos[0], pos[1], pos[2]);
         } else {
