@@ -13,44 +13,46 @@ import createBackground from './prefabs/background';
 
 import CONSTRAINTS from "./enums/constraints"
 
-function makeTileRect() {
+function makeTileRect(b, t) {
     const tiles = [];
-    tiles.push({
-        position: [0, 1, 0],
-        type: CELL.DEFAULT
-    });
-    tiles.push({
-        position: [0, 2, 0],
-        type: CELL.DEFAULT
-    });
-    tiles.push({
-        position: [0, 3, 0],
-        type: CELL.DEFAULT
-    });
-    tiles.push({
-        position: [1, 0, 0],
-        type: CELL.DEFAULT
-    });
-    tiles.push({
-        position: [1, 1, 0],
-        type: CELL.DEFAULT
-    });
-    tiles.push({
-        position: [1, 2, 0],
-        type: CELL.DEFAULT
-    });
-    tiles.push({
-        position: [1, 3, 0],
-        type: CELL.DEFAULT
-    });
-    tiles.push({
-        position: [1, 4, 0],
-        type: CELL.DEFAULT
-    });
-    tiles.push({
-        position: [2, 2, 0],
-        type: CELL.DEFAULT
-    });
+
+    let start_x = Math.floor(b/2);
+    let start_y = 0;
+
+    for (let x = 0; x < b; x++) {
+        let new_x = start_x;
+        for (let y = start_y; y < start_y + t; y++) {
+            tiles.push(new Tile([new_x, y, 0], CELL.DEFAULT));
+            tiles[tiles.length-1].setOject3D(TileLevel.makeTileObject3D(
+                new_x, y, 0,
+                CELL.DEFAULT,
+            ));
+
+            if (y % 2 == 1) {
+                new_x++;
+            }
+        }
+        if (x % 2 == 0) {
+            start_x--;
+        }
+        start_y++;
+    }
+
+    return tiles;
+}
+
+function makeTileRagged(w, h) {
+    const tiles = [];
+
+    for (let i = 0; i < w; ++i) {
+        for (let j = 0; j < h; ++j) {
+            tiles.push(new Tile([i, j, 0], CELL.DEFAULT));
+            tiles[tiles.length-1].setOject3D(TileLevel.makeTileObject3D(
+                i, j, 0,
+                CELL.DEFAULT,
+            ));
+        }
+    }
     return tiles;
 }
 
@@ -83,29 +85,17 @@ function level1() {
 }
 
 function level2() {
-    const size = 3, w = 5, h = 15;
-    let where = 0;
-    const tiles = [];
+    const a = 5, b = 15;
+    const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
+    const tiles = makeTileRect(a, b);
+    // const tiles = makeTileRagged(a, b);
     const chance = new Chance();
-    const allIdx = [...Array(w*h).keys()];
+    const allIdx = [...Array(a*b).keys()];
     const idx = chance.pickset(allIdx, 3)
     const idxObstacle = chance.pickset(allIdx.filter(i => !idx.includes(i)), 2);
 
-    for (let i = 0; i < w; ++i) {
-        for (let j = 0; j < h; ++j) {
-            const type = idxObstacle.includes(where) ?
-                CELL.OBSTACLE : CELL.DEFAULT;
-
-            tiles.push(new Tile([i, j, 0], type));
-            tiles[tiles.length-1].setOject3D(TileLevel.makeTileObject3D(
-                i, j, 0,
-                type,
-            ));
-            where++;
-        }
-    }
-    tiles[idx[0]].addComponent(GoalTile.create(tiles[idx[0]]));
-    tiles[idx[1]].addComponent(NumberTile.create(tiles[idx[1]], 6));
+    // tiles[idx[0]].addComponent(GoalTile.create(tiles[idx[0]]));
+    // tiles[idx[1]].addComponent(NumberTile.create(tiles[idx[1]], 6));
     const startPos = tiles[idx[2]].getTilePosition();
 
     const objects = [
