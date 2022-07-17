@@ -93,7 +93,7 @@ class InputHandler {
     }
 
     isKeyUp(key) {
-        if (this.isKeyboardLocked()) return false;
+        if (this.isKeyboardLocked()) return true;
         return this.keys[key] === undefined || this.keys[key].action === INPUT_ACTION.UP
     }
 
@@ -139,7 +139,7 @@ class InputHandler {
     }
 
     isMouseButtonUp(button) {
-        if (this.isMouseLocked()) return false;
+        if (this.isMouseLocked()) return true;
 
         return this.mouseUp[button].time !== undefined &&
             this.onTime(this.mouseUp[button].time);

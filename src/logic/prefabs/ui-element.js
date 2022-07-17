@@ -9,18 +9,14 @@ export default class UIElement extends GameObject {
         this.addComponent(Picking.create(this, x, y, texture))
     }
 
-    static createUIObject(x, y, texName) {
-        let texture = new THREE.TextureLoader().load(
-            `assets/sprites/${texName}.png`
-        );
-        const geometry = new THREE.PlaneGeometry(1, 1);
-        const material = new THREE.MeshBasicMaterial({
+    static createUIObject(x, y, texPath) {
+        let texture = new THREE.TextureLoader().load(texPath);
+        const material = new THREE.SpriteMaterial({
             map: texture,
-            transparent: true,
         });
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(x, y, 0);
-        mesh.renderOrder = 100;
-        return mesh;
+        const sprite = new THREE.Sprite(material)
+        sprite.position.set(x, y, 0);
+        sprite.renderOrder = 100;
+        return sprite;
     }
 }

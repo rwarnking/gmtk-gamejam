@@ -18,10 +18,8 @@ export default class Picking extends Component {
         return new Picking(obj, x, y, texture);
     }
 
-    static makePickingObject(x, y, texName, color) {
-        let texture = new THREE.TextureLoader().load(
-            `assets/sprites/${texName}.png`
-        );
+    static makePickingObject(x, y, texPath, color) {
+        let texture = new THREE.TextureLoader().load(texPath);
         const geometry = new THREE.PlaneGeometry(1, 1);
         const pickingMaterial = new THREE.MeshPhongMaterial({
             emissive: color,

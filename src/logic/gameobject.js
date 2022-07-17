@@ -4,7 +4,7 @@ let colorid = 1;
 
 export default class GameObject {
 
-    constructor(object3d) {
+    constructor(object3d=null) {
         this.id = GameObject.nextColorID();
         this.obj3d = object3d;
         // components
@@ -38,6 +38,10 @@ export default class GameObject {
         return this.obj3d;
     }
 
+    hasObject3D() {
+        return this.obj3d !== null;
+    }
+
     addComponent(component) {
         this.components.push(component);
     }
@@ -66,7 +70,6 @@ export default class GameObject {
     }
 
     onClick(button) {
-        console.log("GameObject " + this.id + " was clicked")
         this.components.forEach(c => c.click(button));
     }
 

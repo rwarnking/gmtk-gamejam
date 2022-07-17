@@ -113,7 +113,7 @@ export default class TileLevel {
         const geometry = new THREE.PlaneGeometry(1, height);
         const material = new THREE.MeshBasicMaterial({
             map: texture,
-            transparent: true,
+            transparent: true
         });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(pos[0], pos[1], pos[2]);
@@ -124,6 +124,8 @@ export default class TileLevel {
             // https://stackoverflow.com/questions/29974578/how-to-flip-a-three-js-texture-horizontally
             mesh.material.map.flipY = false;
             mesh.material.map.rotation = Math.PI;
+            // works when using sprite instead of mesh
+            // mesh.material.color = new THREE.Color(0.1, 0.5, 1);
         }
         // set the render order
         mesh.renderOrder = TileLevel.calcRenderOrder(x, y, z); // TODO: +z*2 ??!!

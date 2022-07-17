@@ -9,69 +9,10 @@ import Inputs, { MOUSE_BUTTON } from '../core/inputs';
 import createPlayer from "./prefabs/player";
 import NumberTile from './prefabs/number-tile';
 import GoalTile from './prefabs/goal-tile';
+import createBackground from './prefabs/background';
 
-function makeTileRect(size) {
+function makeTileRect() {
     const tiles = [];
-    // for (let i = 0; i <= x+1; i++) {
-
-    //     if (i > 0 && i <= x) {
-    //         tiles.push({
-    //             position: [i, i, 0],
-    //             type: CELL.DEFAULT
-    //         });
-    //     }
-    //     if (i+2 <= x+1) {
-    //         tiles.push({
-    //             position: [i, i+2, 0],
-    //             type: CELL.DEFAULT
-    //         });
-    //     }
-    //     if (i-2 >= 0) {
-    //         tiles.push({
-    //             position: [i, i-2, 0],
-    //             type: CELL.DEFAULT
-    //         });
-    //     }
-    // }
-
-    // first three
-    // tiles.push({
-    //     position: [size-2, 1, 0],
-    //     type: CELL.DEFAULT
-    // });
-    // tiles.push({
-    //     position: [size-1, 0, 0],
-    //     type: CELL.DEFAULT
-    // });
-    // tiles.push({
-    //     position: [size, 1, 0],
-    //     type: CELL.DEFAULT
-    // });
-
-    // for (let i = 1; i < size-1; i++) {
-    //     for (let j = 0; j <= size+1; j++) {
-    //         tiles.push({
-    //             position: [i, j, 0],
-    //             type: CELL.DEFAULT
-    //         });
-    //     }
-    // }
-
-    // // last three
-    // tiles.push({
-    //     position: [size-1, size-1, 0],
-    //     type: CELL.DEFAULT
-    // });
-    // tiles.push({
-    //     position: [size-2, size, 0],
-    //     type: CELL.DEFAULT
-    // });
-    // tiles.push({
-    //     position: [size-2, 0, 0],
-    //     type: CELL.DEFAULT
-    // });
-
-
     tiles.push({
         position: [0, 1, 0],
         type: CELL.DEFAULT
@@ -164,7 +105,10 @@ function level2() {
     tiles[idx[0]].addComponent(GoalTile.create(tiles[idx[0]]));
     tiles[idx[1]].addComponent(NumberTile.create(tiles[idx[1]], 6));
 
-    const objects = [createPlayer(1, 2, 0)];
+    const objects = [
+        createPlayer(1, 2, 0),
+        createBackground()
+    ];
 
     return {
         tiles: tiles,

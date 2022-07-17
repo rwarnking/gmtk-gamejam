@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import TileLevel from '../core/tile-level';
 import UI from '../core/ui';
+import TAGS from './enums/tags';
 import { level2 } from './scenes';
 
 const LEVELS = [
@@ -19,6 +20,8 @@ export default class SceneManager {
         this.ui = new UI();
         this.level = -1;
         this.levelData = null;
+        this.bgColor = new THREE.Color(29/255, 133/255, 181/255);
+        this.bgObj = null;
     }
 
     setupScene(levelData) {
@@ -42,6 +45,16 @@ export default class SceneManager {
         levelData.objects.forEach(o => this.addGameObject(o, scene))
         // add the tiles' gameobject3d to our list of objects
         this.ui.forEach(ui => this.addUIElement(ui, scene));
+
+        const bgObj = this.objects.find(o => o.hasTag(TAGS.BACKGROUND));
+        this.bgObj = bgObj ? bgObj.getComponent("TextureCycle") : null;
+        this.setBackground(scene);
+    }
+
+    setBackground(scene) {
+        scene.background = this.bgObj !== null ?
+            this.bgObj.getCurrentTexture() :
+            this.bgColor;
     }
 
     getScene() {
@@ -76,14 +89,16 @@ export default class SceneManager {
     }
 
     addGameObject(object, scene) {
-        if (object.getObject3D()) {
+        if (object.hasObject3D()) {
             scene.add(object.getObject3D());
         }
         this.objects.push(object);
     }
 
     addUIElement(object, scene) {
-        scene.add(object.getObject3D());
+        if (object.hasObject3D()) {
+            scene.add(object.getObject3D());
+        }
         this.objects.push(object);
         this.pickingScene.add(object.getPickingObject());
     }
@@ -106,6 +121,9 @@ export default class SceneManager {
 
     update(delta) {
         this.objects.forEach(obj => obj.update(delta));
+        if (this.bgObj !== null) {
+            this.setBackground(this.getScene());
+        }
     }
 
     pickObject(id) {
