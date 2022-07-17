@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import Tile, { CELL } from "../logic/prefabs/tile";
 
+let CX = -3, CY = -3;
+
 export default class TileLevel {
 
     constructor() {
@@ -12,7 +14,6 @@ export default class TileLevel {
         this.height = height;
         this.depth = depth;
         this.tiles = [];
-
         // from left to right
         for (let i = 0; i < width; ++i) {
             this.tiles.push([]);
@@ -62,19 +63,25 @@ export default class TileLevel {
         }
     }
 
+    static initCenter(width, height) {
+        CX = - Math.floor(width * 0.5);
+        CY = - Math.floor(height * 0.5);
+    }
+
     static calcRenderOrder(x, y, z, h=200) {
         return (h-y) * 2;
     }
 
     static calculate3DPosition(x, y, z, type=CELL.DEFAULT) {
+        const l = -3;
         switch (type) {
             case CELL.OBSTACLE: return [
-                y % 2 == 0 ? -2 + x : -1.5 + x,
+                y % 2 == 0 ? l + x : l + 0.5 + x,
                 -2 + y * 0.25 * 0.75 + 0.25,
                 z
             ]
             default: return [
-                y % 2 == 0 ? -2 + x : -1.5 + x,
+                y % 2 == 0 ? l + x : l + 0.5 + x,
                 -2 + y * 0.25 * 0.75,
                 z
             ];

@@ -27,7 +27,7 @@ export default class Renderer {
     }
 
     setupRenderer() {
-        this.camera = new THREE.PerspectiveCamera( 75, this.width / this.height, 0.1, 1000 );
+        this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.2, 1000);
         this.renderer = new THREE.WebGLRenderer();
         // WHYYYYY
         // this.renderer.sortObjects = false;
@@ -36,6 +36,10 @@ export default class Renderer {
 
         this.camera.position.z = 5;
     }
+
+    // initScene(x, y, z) {
+    //     this.camera.position.set(x, y, z)
+    // }
 
     render(scene) {
         this.renderer.render(scene, this.camera);

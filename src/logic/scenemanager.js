@@ -8,7 +8,7 @@ const LEVELS = [
     level2,
     level3,
     level4,
-    level5
+    level5,
 ];
 
 export default class SceneManager {
