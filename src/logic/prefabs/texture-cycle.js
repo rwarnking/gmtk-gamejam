@@ -122,13 +122,12 @@ export default class TextureCycle extends Component {
             this.obj.getObject3D().material.map = texture;
 
             if (this.flip) {
-                // this.obj.getObject3D().material.map.center = new THREE.Vector2(0.5, 0.5);
-                // this.obj.getObject3D().material.map.flipY = false;
-                // this.obj.getObject3D().material.map.rotation = Math.PI;
+                this.obj.getObject3D().material.map.center = new THREE.Vector2(0.5, 0.5);
+                this.obj.getObject3D().material.map.wrapS = THREE.RepeatWrapping;
+                this.obj.getObject3D().material.map.repeat.x = - 1;
             } else {
                 this.obj.getObject3D().material.map.center = new THREE.Vector2(0.5, 0.5);
-                this.obj.getObject3D().material.map.flipY = true;
-                this.obj.getObject3D().material.map.rotation = 0;
+                this.obj.getObject3D().material.map.repeat.x = 1;
             }
             this.obj.getObject3D().material.needsUpdate = true;
         }
