@@ -2,17 +2,28 @@ export default class Logic {
 
     constructor() {
         this.player = null;
+        this.settings = null;
         this.reset();
     }
 
     reset() {
         this.goalReached = false;
         this.numbersCollected = new Set();
-        this.numbersCollected.add(1);
         this.goalNumbers = new Set();
-        for (let i = 1; i <= 6; ++i) {
-            this.goalNumbers.add(i);
+
+        if (this.settings !== null) {
+            this.settings.startNumbers.forEach(n => {
+                this.numbersCollected.add(n);
+            });
+            this.settings.goalNumbers.forEach(n => {
+                this.goalNumbers.add(n);
+            });
         }
+    }
+
+    initSettings(settings) {
+        this.settings = settings;
+        this.reset();
     }
 
     setPlayer(player) {
@@ -26,13 +37,14 @@ export default class Logic {
     setGoalReached(value) {
         this.goalReached = value;
         console.log(value ? "goal reached" : "goal left");
-        if (value && !this.isFinished()) {
+        if (value && !this.isOver()) {
             console.log("still missing numbers");
         }
     }
 
-    addNumber(number) {
+    addNumber(n) {
         this.numbersCollected.add(n);
+        console.log("number " + n + " has been added to the dice");
     }
 
     hasAllNumbers() {
@@ -44,7 +56,7 @@ export default class Logic {
         return true;
     }
 
-    isFinished() {
+    isOver() {
         return this.goalReached && this.hasAllNumbers();
     }
 }

@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 import TileLevel from '../core/tile-level';
 import UIElements from '../core/ui-elements';
+import { level2 } from './scenes';
+
+const LEVELS = [
+    level2
+];
 
 export default class SceneManager {
 
@@ -11,6 +16,7 @@ export default class SceneManager {
         this.pickingScene.background = new THREE.Color(0);
         this.tileLevel = new TileLevel();
         this.uiElements = new UIElements();
+        this.level = -1;
     }
 
     setupScene(level) {
@@ -37,6 +43,21 @@ export default class SceneManager {
 
         // return the scene
         return this.scene;
+    }
+
+    getScene() {
+        return this.scene;
+    }
+
+    loadLevel(index) {
+        this.level = Math.max(0, index) % LEVELS.length;
+        const levelData = LEVELS[this.level]();
+        this.setupScene(levelData);
+        return levelData;
+    }
+
+    loadNextLevel() {
+        return this.loadLevel(this.level+1)
     }
 
     addGameObject(object) {

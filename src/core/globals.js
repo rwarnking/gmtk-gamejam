@@ -1,19 +1,23 @@
 import TAGS from "../logic/enums/tags";
 import AudioListener from "../logic/audio";
+import Inputs from "./inputs";
 
 const GAME = (function() {
 
-    let renderer, smgr, scene, logic, audiolistener;
+    let renderer, smgr, logic, audiolistener;
 
     return {
 
-        init: function(render, scenemgr, log, level) {
-            renderer = render;
+        init: function(rendererObject, smgrObject, logicObject) {
+            renderer = rendererObject;
             renderer.setupRenderer();
-            smgr = scenemgr
-            logic = log;
-            scene = smgr.setupScene(level());
+            smgr = smgrObject
+            logic = logicObject;
+
+            const levelData = smgr.loadNextLevel()
+
             logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
+            logic.initSettings(levelData.settings);
 
             audiolistener = new AudioListener();
             audiolistener.changesound();
@@ -33,7 +37,7 @@ const GAME = (function() {
         },
 
         scene: function() {
-            return scene;
+            return smgr.getScene();
         },
 
         tileLevel: function() {
@@ -46,6 +50,12 @@ const GAME = (function() {
 
         pickingScene: function() {
             return smgr.pickingScene;
+        },
+
+        loadNextLevel: function() {
+            logic.reset();
+            Inputs.unlockAll();
+            smgr.loadNextLevel();
         },
 
     }

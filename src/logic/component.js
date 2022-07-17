@@ -14,4 +14,8 @@ export default class Component {
             this.func(this.obj, param);
         }
     }
+
+    onEnter() {}
+
+    onLeave() {}
 }

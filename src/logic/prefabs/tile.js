@@ -1,6 +1,5 @@
-import GameObject from "./gameobject";
-import GAME from "../core/globals";
-import MODS from "./enums/mods";
+import GameObject from "../gameobject";
+import MODS from "../enums/mods";
 
 const CELL = Object.freeze({
     EMPTY: -1,
@@ -42,20 +41,23 @@ class Tile extends GameObject {
     }
 
     canMoveTo() {
-        return !this.isCellType(CELL.OBSTACLE) & !this.isCellType(CELL.ENEMY);
+        return !this.isEmpty() &&
+            !this.isCellType(CELL.OBSTACLE) &&
+            !this.isCellType(CELL.ENEMY);
     }
 
     addModifier(mod) {
         this.mods.push(mod);
-        if (this.cell === CELL.GOAL && mod === MODS.PLAYER) {
-            GAME.logic().setGoalReached(true);
+        if (mod === MODS.PLAYER) {
+            this.components.forEach(c => c.onEnter());
+
         }
     }
 
     removeModifier(mod) {
         this.mods = this.mods.filter(m => m !== mod);
-        if (this.cell === CELL.GOAL && mod === MODS.PLAYER) {
-            GAME.logic().setGoalReached(false);
+        if (mod === MODS.PLAYER) {
+            this.components.forEach(c => c.onLeave());
         }
     }
 

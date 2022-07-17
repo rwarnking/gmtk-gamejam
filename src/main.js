@@ -3,12 +3,11 @@ import GAME from './core/globals';
 import Renderer from "./renderer/renderer";
 import SceneManager from "./logic/scenemanager";
 import Logic from "./logic/logic";
-import { level1, level2 } from "./logic/scenes";
 import Inputs, { MOUSE_BUTTON } from './core/inputs'
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    let last, delta;
+    let last, delta, gameOver = false;
 
     function animate(timestamp) {
 
@@ -32,6 +31,20 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
+        // check if game/level is over
+        if (!gameOver && GAME.logic().isOver()) {
+            gameOver = true;
+            console.log("game is over");
+            Inputs.clear();
+            Inputs.lockKeyboard();
+
+            setTimeout(function() {
+                console.log("loading next level");
+                gameOver = false;
+                GAME.loadNextLevel();
+            }, 1000);
+        }
+
         last = timestamp;
         requestAnimationFrame(animate);
     };
@@ -39,8 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
     GAME.init(
         new Renderer(),
         new SceneManager(),
-        new Logic(),
-        level2
+        new Logic()
     );
 
     animate();

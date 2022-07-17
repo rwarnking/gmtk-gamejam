@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Tile, { CELL } from "../logic/tile";
+import Tile, { CELL } from "../logic/prefabs/tile";
 
 export default class TileLevel {
 
@@ -33,23 +33,14 @@ export default class TileLevel {
         }
         array.forEach(tile => {
             // if not empty
-            if (tile.type !== CELL.EMPTY) {
-                const t = this.getTile(
-                    tile.position[0],
-                    tile.position[1],
-                    tile.position[2]
+            if (!tile.isEmpty()) {
+                const pos = tile.getTilePosition();
+                this.setTile(
+                    pos[0],
+                    pos[1],
+                    pos[2],
+                    tile
                 );
-                // set cell type
-                t.setCellType(tile.type);
-                // set (calculated) 3D position
-                t.setTilePosition(tile.position);
-                // set object3D / texture
-                t.setOject3D(TileLevel.makeTileObject3D(
-                    tile.position[0],
-                    tile.position[1],
-                    tile.position[2],
-                    tile.type,
-                ));
             }
         });
     }
@@ -79,7 +70,7 @@ export default class TileLevel {
         switch (type) {
             case CELL.OBSTACLE: return [
                 y % 2 == 0 ? -2 + x : -1.5 + x,
-                -2 + y * 0.25 * 0.75 + 0.5 * 0.75,
+                -2 + y * 0.25 * 0.75 + 0.2,
                 z
             ]
             default: return [
@@ -91,31 +82,29 @@ export default class TileLevel {
     }
 
     static makeTileObject3D(x, y, z, type) {
-        let texture, pos, height, rotate = false;
+        let texture, pos, height = 0.5, rotate = false;
 
         switch (type) {
             case CELL.OBSTACLE: {
-                height = 1.0;
+                height = 0.75;
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
                 texture = new THREE.TextureLoader().load(
-                    'assets/sprites/obstacle_01.png'
+                    'assets/sprites/obstacle_128x127_t.png'
                 );
             } break;
             case CELL.GOAL: {
-                height = 0.5;
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
                 texture = new THREE.TextureLoader().load(
                     'assets/sprites/rainbow-goal_128x64_t.png'
                 );
             } break;
             default: {
-                height = 0.5;
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
                 const gras = Math.random() > 0.65;
                 rotate = Math.random() > 0.5;
                 texture = new THREE.TextureLoader().load(
                     gras ?
-                        'assets/sprites/dirt-gras_128x64_t.png' :
+                        'assets/sprites/full-gras_128x64_t.png' :
                         'assets/sprites/stone-cracks_128x64_t.png'
                 );
             } break;
@@ -142,8 +131,11 @@ export default class TileLevel {
         return mesh;
     }
 
+    setTile(x, y, z, t) {
+        this.tiles[x][y][z] = t;
+    }
+
     getTile(x, y, z) {
-        console.log(x, y, z)
         return this.tiles[x][y][z];
     }
 
