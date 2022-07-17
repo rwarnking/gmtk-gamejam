@@ -3,13 +3,13 @@ import UIElement from "../logic/prefabs/ui-element";
 import GAME from "./globals";
 
 const UI_POSITIONS = [
-    [-2.0, 3.0],
-    [-1.0, 3.0],
-    [+2.5, 3.0]
+    // [-2.0, 3.0],
+    // [-1.0, 3.0],
+    [+2.5, 3.0],
 ];
 const UI_TEXTURES = [
-    "assets/sprites/dice-preview.png",
-    "assets/sprites/dice-goal.png",
+    // "assets/sprites/dice-preview.png",
+    // "assets/sprites/dice-goal.png",
     "assets/sprites/restart-button_up.png",
 ];
 
@@ -29,7 +29,6 @@ export default class UI {
             ));
         })
         const last = this.elements[this.elements.length-1];
-
         last.getPicking()
             .setClickFunc(GAME.restartLevel);
         last.addComponent(TextureCycle.createToggle(

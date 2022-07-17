@@ -96,7 +96,6 @@ function createPlayer(x, y, z, startNumber) {
             currTile.removeModifier(MODS.PLAYER);
             tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
             tile.addModifier(MODS.PLAYER);
-            GAME.audiolistener().playroll();
 
             // if the next tile is a number tile, tell it how we want to move there
             const numTile = tile.getComponent("NumberTile");
@@ -106,6 +105,7 @@ function createPlayer(x, y, z, startNumber) {
 
             const dice = obj.getComponent("Dice");
             dice.move(dir);
+            GAME.audiolistener().playroll();
 
         }
     }));

@@ -56,7 +56,6 @@ const GAME = (function() {
             const levelData = smgr.loadNextLevel();
             const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
             logic.init(levelData.settings, player);
-            logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
             setTimeout(() => smgr.applyNextScene(), 500);
         },
 

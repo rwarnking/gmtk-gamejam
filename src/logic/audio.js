@@ -8,14 +8,14 @@ export default class AudioListener {
         this.sound = new THREE.Audio(this.audiolistener);
         this.loader = new THREE.AudioLoader();
         this.songnum = 0;
-        this.volume = 0.2;
+        this.volume = 0.05;
         this.songs =  ['/audio/music2.wav','/audio/music.wav','/audio/music2.wav']
         this.bumpsound = new THREE.Audio(this.audiolistener);
         this.rollsound = new THREE.Audio(this.audiolistener);
         this.winsound = new THREE.Audio(this.audiolistener);
         this.collectsound = new THREE.Audio(this.audiolistener);
         this.nonwinsound = new THREE.Audio(this.audiolistener);
-        this.effectsoundvolume = 0.7;
+        this.effectsoundvolume = 0.25;
         this.init();
 
     }
@@ -95,12 +95,10 @@ export default class AudioListener {
         this.effectsoundvolume = newvolume;
         this.init();
         // alternatively call all vars and change their volume individualy
-
     }
 
     playbump() {
         this.bumpsound.play();
-
     }
 
     playroll() {

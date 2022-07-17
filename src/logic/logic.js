@@ -56,7 +56,10 @@ export default class Logic {
     }
 
     canAddNumber(direction, number) {
-        return this.dice.goalNumberFromDirection(direction) === number;
+        if (this.constraints.includes(CONSTRAINTS.LIKE_REAL_DICE)) {
+            return this.dice.goalNumberFromDirection(direction) === number;
+        }
+        return true;
     }
 
     addNumber(direction, number) {

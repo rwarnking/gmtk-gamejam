@@ -117,11 +117,6 @@ function level2() {
     const a = 6, b = 6;
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
-    // const tiles = makeTileRagged(a, b);
-    const chance = new Chance();
-    const allIdx = [...Array(a*b).keys()];
-    const idx = chance.pickset(allIdx, 3)
-    const idxObstacle = chance.pickset(allIdx.filter(i => !idx.includes(i)), 2);
 
     tiles[16].addComponent(GoalTile.create(tiles[16]));
     tiles[11].addComponent(NumberTile.create(tiles[11], 4));
@@ -143,11 +138,12 @@ function level2() {
         height: h,
         depth: 1,
         settings: {
-            startNumbers: [1],
-            goalNumbers: [1,6],
+            startNumbers: [1,2,3],
+            goalNumbers: [1,2,3,4,5,6],
             constraints: [
-                CONSTRAINTS.LIKE_REAL_DICE
-            ] // TODO: ?!
+                // TODO: ?!
+                // CONSTRAINTS.LIKE_REAL_DICE
+            ]
         }
     };
 }
@@ -156,11 +152,6 @@ function level3() {
     const a = 6, b = 10;
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
-    // const tiles = makeTileRagged(a, b);
-    const chance = new Chance();
-    const allIdx = [...Array(a*b).keys()];
-    const idx = chance.pickset(allIdx, 3)
-    const idxObstacle = chance.pickset(allIdx.filter(i => !idx.includes(i)), 2);
 
     tiles[47].addComponent(GoalTile.create(tiles[47]));
     tiles[26].addComponent(NumberTile.create(tiles[26], 1));
@@ -199,10 +190,11 @@ function level3() {
         height: h,
         depth: 1,
         settings: {
-            startNumbers: [1,3,2],
-            goalNumbers: [1,6],
+            startNumbers: [6,5],
+            goalNumbers: [1,2,3,4,5,6],
             constraints: [
-                CONSTRAINTS.LIKE_REAL_DICE // TODO: ?!
+                // TODO: ?!
+                // CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -251,7 +243,9 @@ function level4() {
     setTileToWater(tiles[39]);
 
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2]),
+        createPlayer(
+            startPos[0], startPos[1], startPos[2]
+        ),
         createBackground()
     ];
 
@@ -262,11 +256,12 @@ function level4() {
         height: h,
         depth: 1,
         settings: {
-            startNumbers: [1],
-            goalNumbers: [1,6],
+            startNumbers: [],
+            goalNumbers: [1,2,3,4,5,6],
             constraints: [
-                CONSTRAINTS.LIKE_REAL_DICE
-            ] // TODO: ?!
+                // TODO: ?!
+                // CONSTRAINTS.LIKE_REAL_DICE
+            ]
         }
     };
 }

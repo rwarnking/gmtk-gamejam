@@ -158,7 +158,6 @@ export default class Dice extends Component {
 
     updateVisibleNumbers() {
         const neighbors = this.getVisibleNumbers();
-        console.log(neighbors, this.numbers);
         const it = neighbors.map(n => this.numbers.has(n) ? n : null);
         this.currTextures = it.map((n, i) => n !== null ? this.getTexture(i,n) : null);
     }

@@ -34,7 +34,7 @@ export default class NumberTile extends Component {
     }
 
     onEnter() {
-        // TODO: player has entered this field
+        // player has entered this field and we can collect the number
         if (this.canCollect()) {
             GAME.logic().addNumberDirect(this.n);
             this.n = null;

@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // check if game/level is over
-        if (!gameOver && GAME.logic().isOver()) {            
+        if (!gameOver && GAME.logic().isOver()) {
             GAME.audiolistener().playwin();
             gameOver = true;
             console.log("game is over");
@@ -47,7 +47,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 loading = true;
                 gameOver = false;
                 GAME.loadNextLevel();
-            }, 1000);
+                loading = false;
+            }, 500);
         }
 
         last = timestamp;

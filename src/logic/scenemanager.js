@@ -83,10 +83,13 @@ export default class SceneManager {
     }
 
     loadLevel(index) {
-        this.level = Math.max(0, index) % LEVELS.length;
-        const levelData = LEVELS[this.level]();
-        this.setupScene(levelData);
-        return levelData;
+        if (index >= 0 && index < LEVELS.length) {
+            this.level = index;
+            const levelData = LEVELS[this.level]();
+            console.log(levelData);
+            this.setupScene(levelData);
+            return levelData;
+        }
     }
 
     loadNextLevel() {
