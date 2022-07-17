@@ -7,6 +7,7 @@ import GameObject from '../gameobject';
 import TAGS from "../enums/tags";
 import MODS from '../enums/mods';
 
+
 function createPlayer(x, y, z, h) {
 
     const texture = new THREE.TextureLoader().load(
@@ -42,32 +43,42 @@ function createPlayer(x, y, z, h) {
             tile = tl.getTileUp(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go up
-                move = true;
+                move = true;    
+            
+            }else{
+                GAME.audiolistener().playbump(); 
             }
         } else if (Inputs.isKeyDown("ArrowDown")) {
             tile = tl.getTileDown(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go down
                 move = true;
+            }else{
+                GAME.audiolistener().playbump(); 
             }
         } else if (Inputs.isKeyDown("ArrowRight")) {
             tile = tl.getTileRight(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go right
                 move = true;
+            }else{
+                GAME.audiolistener().playbump(); 
             }
         } else if (Inputs.isKeyDown("ArrowLeft")) {
             tile = tl.getTileLeft(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go left
                 move = true;
+            }else{
+                GAME.audiolistener().playbump(); 
             }
         }
 
         if (move) {
             currTile.removeModifier(MODS.PLAYER);
             tc.move(tile.getTilePosition());
-            tile.addModifier(MODS.PLAYER)
+            tile.addModifier(MODS.PLAYER);
+            GAME.audiolistener().playroll();
         }
     }));
 

@@ -20,8 +20,7 @@ const GAME = (function() {
             logic.initSettings(levelData.settings);
 
             audiolistener = new AudioListener();
-            audiolistener.changesound();
-            audiolistener.changevolume(0.05);
+            //audiolistener.changevolume(0.05);
         },
 
         audiolistener: function(){
