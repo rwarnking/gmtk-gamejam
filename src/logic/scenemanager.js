@@ -12,6 +12,7 @@ export default class SceneManager {
     constructor() {
         this.objects = [];
         this.scene = new THREE.Scene();
+        this.nextScene = new THREE.Scene();
         this.pickingScene = new THREE.Scene();
         this.pickingScene.background = new THREE.Color(0);
         this.tileLevel = new TileLevel();
@@ -21,7 +22,6 @@ export default class SceneManager {
     }
 
     setupScene(levelData) {
-        // clear the scene
         this.objects = [];
         // create tile game objects in tile-level
         this.tileLevel.initFromArray(
@@ -31,22 +31,33 @@ export default class SceneManager {
             levelData.depth
         );
         this.ui.init();
+        const scene = this.scene.children.length > 0 ? this.nextScene : this.scene;
 
-        this.scene.clear();
+        // clear the scenes
+        scene.clear();
         this.pickingScene.clear();
         // add the tiles' gameobject3d to our list of objects
-        this.tileLevel.forEach(t => this.addGameObject(t));
+        this.tileLevel.forEach(t => this.addGameObject(t, scene));
         // add other objects that are not tiles
-        levelData.objects.forEach(o => this.addGameObject(o))
+        levelData.objects.forEach(o => this.addGameObject(o, scene))
         // add the tiles' gameobject3d to our list of objects
-        this.ui.forEach(ui => this.addUIElement(ui));
-
-        // return the scene
-        return this.scene;
+        this.ui.forEach(ui => this.addUIElement(ui, scene));
     }
 
     getScene() {
         return this.scene;
+    }
+
+    getNextScene() {
+        return this.nextScene;
+    }
+
+    applyNextScene() {
+        if (this.nextScene.children.length > 0) {
+            this.scene.clear();
+            this.scene = this.nextScene;
+            this.nextScene = new THREE.Scene();
+        }
     }
 
     loadLevel(index) {
@@ -64,15 +75,15 @@ export default class SceneManager {
         return this.loadLevel(this.level);
     }
 
-    addGameObject(object) {
+    addGameObject(object, scene) {
         if (object.getObject3D()) {
-            this.scene.add(object.getObject3D());
+            scene.add(object.getObject3D());
         }
         this.objects.push(object);
     }
 
-    addUIElement(object) {
-        this.scene.add(object.getObject3D());
+    addUIElement(object, scene) {
+        scene.add(object.getObject3D());
         this.objects.push(object);
         this.pickingScene.add(object.getPickingObject());
     }

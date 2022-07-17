@@ -56,12 +56,16 @@ const GAME = (function() {
             logic.reset();
             Inputs.unlockAll();
             smgr.loadNextLevel();
+            logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
+            setTimeout(() => smgr.applyNextScene(), 500);
         },
 
         restartLevel: function() {
             logic.reset();
             Inputs.unlockAll();
             smgr.restartLevel();
+            logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
+            setTimeout(() => smgr.applyNextScene(), 500);
         }
 
     }
