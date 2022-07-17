@@ -79,6 +79,10 @@ export default class TextureCycle extends Component {
         this.animate = true;
     }
 
+    isAnimating() {
+        return this.animate;
+    }
+
     setNextTexture() {
         if (this.fromStart) {
             if (this.index === this.textures.length-1) {

@@ -30,6 +30,10 @@ export default class GameObject {
         return this.components.find(c => c.type === type);
     }
 
+    hasComponent(type) {
+        return this.getComponent(type) !== undefined;
+    }
+
     setOject3D(obj3d) {
         this.obj3d = obj3d;
     }
