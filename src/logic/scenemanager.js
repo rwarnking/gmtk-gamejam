@@ -2,10 +2,12 @@ import * as THREE from 'three';
 import TileLevel from '../core/tile-level';
 import UI from '../core/ui';
 import TAGS from './enums/tags';
-import { level2 } from './scenes';
+import { level2, level3, level4 } from './scenes';
 
 const LEVELS = [
-    level2
+    level2,
+    level3,
+    level4,
 ];
 
 export default class SceneManager {
