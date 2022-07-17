@@ -1,9 +1,12 @@
 import GAME from "../core/globals";
+import CONSTRAINTS from "./enums/constraints";
+import REAL_DICE from "./enums/real-dice";
 
 export default class Logic {
 
     constructor() {
         this.player = null;
+        this.dice = null;
         this.settings = null;
         this.reset();
     }
@@ -20,16 +23,23 @@ export default class Logic {
             this.settings.goalNumbers.forEach(n => {
                 this.goalNumbers.add(n);
             });
+            this.constraints = this.settings.constraints;
         }
     }
 
-    initSettings(settings) {
+    init(settings, player) {
         this.settings = settings;
         this.reset();
+        this.setPlayer(player);
     }
 
     setPlayer(player) {
         this.player = player;
+        this.dice = player.getComponent("Dice");
+        let i = 0;
+        this.numbersCollected.forEach(n=> {
+            this.dice.addNumber(n, i++ == this.numbersCollected.size-1);
+        });
     }
 
     getPlayer() {
@@ -45,10 +55,23 @@ export default class Logic {
         }
     }
 
-    addNumber(n) {
-        this.numbersCollected.add(n);
+    canAddNumber(direction, number) {
+        return this.dice.goalNumberFromDirection(direction) === number;
+    }
+
+    addNumber(direction, number) {
+        if (this.canAddNumber(direction, number)) {
+            return this.addNumberDirect(number);
+        }
+        return false;
+    }
+
+    addNumberDirect(number) {
+        console.log("number " + number + " wan be added");
+        this.numbersCollected.add(number);
+        this.dice.addNumber(number);
         GAME.audiolistener().playcollect();
-        console.log("number " + n + " has been added to the dice");
+        return true;
     }
 
     hasAllNumbers() {
@@ -60,8 +83,25 @@ export default class Logic {
         return true;
     }
 
+    diceFaceHasNumber(index, number) {
+        return this.dice.getFaceNumber(index) === number;
+    }
+
+    testConstraint(constraint) {
+        switch(constraint) {
+            case CONSTRAINTS.LIKE_REAL_DICE: {
+                return Object.entries(REAL_DICE[0]).every(([i, v]) => {
+                    return this.diceFaceHasNumber(i, v)
+                });
+            }
+        }
+    }
+
+    testAllConstraints() {
+        return this.constraints.every(c => this.testConstraint(c));
+    }
+
     isOver() {
-        return this.goalReached && this.hasAllNumbers();
-        
+        return this.goalReached && this.hasAllNumbers() && this.testAllConstraints();
     }
 }

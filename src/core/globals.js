@@ -15,9 +15,8 @@ const GAME = (function() {
             logic = logicObject;
 
             const levelData = smgr.loadNextLevel()
-
-            logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
-            logic.initSettings(levelData.settings);
+            const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
+            logic.init(levelData.settings, player);
 
             audiolistener = new AudioListener();
             //audiolistener.changevolume(0.05);
@@ -54,7 +53,9 @@ const GAME = (function() {
         loadNextLevel: function() {
             logic.reset();
             Inputs.unlockAll();
-            smgr.loadNextLevel();
+            const levelData = smgr.loadNextLevel();
+            const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
+            logic.init(levelData.settings, player);
             logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
             setTimeout(() => smgr.applyNextScene(), 500);
         },
@@ -62,8 +63,9 @@ const GAME = (function() {
         restartLevel: function() {
             logic.reset();
             Inputs.unlockAll();
-            smgr.restartLevel();
-            logic.setPlayer(smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER)))
+            const levelData = smgr.restartLevel();
+            const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
+            logic.init(levelData.settings, player);
             setTimeout(() => smgr.applyNextScene(), 500);
         }
 

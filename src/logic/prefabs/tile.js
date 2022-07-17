@@ -50,7 +50,6 @@ class Tile extends GameObject {
         this.mods.push(mod);
         if (mod === MODS.PLAYER) {
             this.components.forEach(c => c.onEnter());
-
         }
     }
 

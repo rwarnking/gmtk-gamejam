@@ -11,9 +11,9 @@ import TextureCycle from "./texture-cycle";
 import TAGS from "../enums/tags";
 import MODS from '../enums/mods';
 import DIRECTION from '../enums/direction';
+import Dice from './dice';
 
-
-function createPlayer(x, y, z, h) {
+function createPlayer(x, y, z, startNumber) {
 
     const texture = new THREE.TextureLoader().load(
         'assets/sprites/dice_base_128x127_t.png'
@@ -97,9 +97,20 @@ function createPlayer(x, y, z, h) {
             tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
             tile.addModifier(MODS.PLAYER);
             GAME.audiolistener().playroll();
+
+            // if the next tile is a number tile, tell it how we want to move there
+            const numTile = tile.getComponent("NumberTile");
+            if (numTile) {
+                numTile.setIncomingDirection(dir);
+            }
+
+            const dice = obj.getComponent("Dice");
+            dice.move(dir);
+
         }
     }));
 
+    // texture cycler for "walking" animation
     obj.addComponent(TextureCycle.createAnimation(
         obj,
         [
@@ -112,6 +123,8 @@ function createPlayer(x, y, z, h) {
         ],
         duration
     ));
+
+    obj.addComponent(Dice.create(obj, startNumber))
 
     return obj;
 }

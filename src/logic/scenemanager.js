@@ -51,6 +51,13 @@ export default class SceneManager {
         const bgObj = this.objects.find(o => o.hasTag(TAGS.BACKGROUND));
         this.bgObj = bgObj ? bgObj.getComponent("TextureCycle") : null;
         this.setBackground(scene);
+
+        // add dice planes
+        const player = this.objects.find(o => o.hasComponent("Dice"));
+        if (player) {
+            const dice = player.getComponent("Dice")
+            dice.getPlanes().forEach(p => this.scene.add(p));
+        }
     }
 
     setBackground(scene) {

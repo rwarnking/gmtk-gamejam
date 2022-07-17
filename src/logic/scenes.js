@@ -188,7 +188,7 @@ function level3() {
     setTileToObstacle(tiles[56]);
 
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2]),
+        createPlayer(startPos[0], startPos[1], startPos[2], 1),
         createBackground()
     ];
 
@@ -199,11 +199,11 @@ function level3() {
         height: h,
         depth: 1,
         settings: {
-            startNumbers: [1],
+            startNumbers: [1,3,2],
             goalNumbers: [1,6],
             constraints: [
-                CONSTRAINTS.LIKE_REAL_DICE
-            ] // TODO: ?!
+                CONSTRAINTS.LIKE_REAL_DICE // TODO: ?!
+            ]
         }
     };
 }
