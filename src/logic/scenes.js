@@ -56,6 +56,14 @@ function makeTileRagged(w, h) {
     return tiles;
 }
 
+function setTileToObstacle(t) {
+    t.setCellType(CELL.OBSTACLE);
+    t.setOject3D(TileLevel.makeTileObject3D(
+        t.position[0], t.position[1], 0,
+        CELL.OBSTACLE,
+    ));
+}
+
 function level1() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -99,6 +107,8 @@ function level2() {
     tiles[4].addComponent(NumberTile.create(tiles[4], 5));
     tiles[7].addComponent(NumberTile.create(tiles[7], 6));
     const startPos = tiles[19].getTilePosition();
+
+    setTileToObstacle(tiles[3]);
 
     const objects = [
         createPlayer(startPos[0], startPos[1], startPos[2]),

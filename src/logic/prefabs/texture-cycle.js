@@ -17,6 +17,8 @@ export default class TextureCycle extends Component {
         this.index = 0;
         this.step = 1;
         this.down = false;
+        this.backwards = false;
+        this.flip = false;
         this.setTexture(this.textures[this.index])
     }
 
@@ -40,7 +42,6 @@ export default class TextureCycle extends Component {
 
     static createAnimation(obj, textures, duration) {
         return new TextureCycle(obj, textures, duration, true, function() {
-
             if (this.animate) {
 
                 if (this.first === undefined) {
@@ -75,15 +76,25 @@ export default class TextureCycle extends Component {
         });
     }
 
-    setAnimate() {
+    setAnimate(backwards=false, flip=false) {
+        this.backwards = backwards;
+        if (backwards) {
+            this.index = this.textures.length - 1;
+            this.step = -1;
+        } else {
+            this.index = 0;
+            this.step = 1;
+        }
+        this.flip = flip;
         this.animate = true;
     }
 
     setNextTexture() {
+        this.index = this.index + this.step;
+
         if (this.fromStart) {
-            if (this.index === this.textures.length-1) {
+            if (this.index > this.textures.length-1 || this.index < 0) {
                 this.index = 0;
-                this.step = 1;
                 this.animate = false;
                 this.first = undefined;
             }
@@ -95,13 +106,26 @@ export default class TextureCycle extends Component {
             }
         }
 
-        this.index = this.index + this.step;
+        if (this.index === 0 || this.index === this.textures.length-1) {
+            this.flip = false;
+        }
+
         this.setTexture(this.textures[this.index])
     }
 
     setTexture(texture) {
         if (this.obj.hasObject3D()) {
             this.obj.getObject3D().material.map = texture;
+
+            if (this.flip) {
+                // this.obj.getObject3D().material.map.center = new THREE.Vector2(0.5, 0.5);
+                // this.obj.getObject3D().material.map.flipY = false;
+                // this.obj.getObject3D().material.map.rotation = Math.PI;
+            } else {
+                this.obj.getObject3D().material.map.center = new THREE.Vector2(0.5, 0.5);
+                this.obj.getObject3D().material.map.flipY = true;
+                this.obj.getObject3D().material.map.rotation = 0;
+            }
             this.obj.getObject3D().material.needsUpdate = true;
         }
     }

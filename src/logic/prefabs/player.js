@@ -44,6 +44,8 @@ function createPlayer(x, y, z, h) {
 
         let tile = null;
         let move = false, dir;
+        let backwards = false;
+        let flip = false;
         const currTile = tl.getTile(tc.x, tc.y, tc.z);
         // otherwise, check if we can move to the next tile
         if (Inputs.isKeyDown("ArrowUp")) {
@@ -52,6 +54,7 @@ function createPlayer(x, y, z, h) {
                 // go up
                 move = true;
                 dir = DIRECTION.UP;
+                flip = true;
             }
         } else if (Inputs.isKeyDown("ArrowDown")) {
             tile = tl.getTileDown(tc.x, tc.y, tc.z);
@@ -59,12 +62,15 @@ function createPlayer(x, y, z, h) {
                 // go down
                 move = true;
                 dir = DIRECTION.DOWN;
+                backwards = true;
+                flip = true;
             }
         } else if (Inputs.isKeyDown("ArrowRight")) {
             tile = tl.getTileRight(tc.x, tc.y, tc.z);
             if (tile && tile.canMoveTo()) {
                 // go right
                 move = true;
+                backwards = true;
                 dir = DIRECTION.RIGHT;
             }
         } else if (Inputs.isKeyDown("ArrowLeft")) {
@@ -77,7 +83,7 @@ function createPlayer(x, y, z, h) {
         }
 
         if (move) {
-            obj.getComponent("TextureCycle").setAnimate();
+            obj.getComponent("TextureCycle").setAnimate(backwards, flip);
             currTile.removeModifier(MODS.PLAYER);
             tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
             tile.addModifier(MODS.PLAYER)
