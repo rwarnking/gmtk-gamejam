@@ -32,7 +32,7 @@ export default class UIElements {
         })
     }
 
-    static makeUIElement(x, y, z) {
+    static makeUIElement(x, y) {
         let texture = new THREE.TextureLoader().load(
             'assets/sprites/obstacle_01.png'
         );
@@ -43,7 +43,8 @@ export default class UIElements {
             transparent: true,
         });
         const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(x, y, z);
+        mesh.position.set(x, y, 0);
+        mesh.renderOrder = 100;
         return mesh;
     }
 
