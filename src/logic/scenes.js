@@ -116,7 +116,8 @@ function level1() {
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
     const obj = new GameObject(cube);
-    obj.addClickComponent(new Component(obj, function(obj, button) {
+    // only triggers on click
+    obj.addComponent(new Component(obj, null, function(obj, button) {
         if (button === MOUSE_BUTTON.LEFT) {
             obj.toggle = obj.toggle === undefined ? true : !obj.toggle;
             const obj3d = obj.getObject3D();

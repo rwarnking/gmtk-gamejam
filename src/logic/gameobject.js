@@ -6,13 +6,9 @@ export default class GameObject {
 
     constructor(object3d) {
         this.id = GameObject.nextColorID();
-        this.pickingColor = GameObject.idToColor(this.id);
         this.obj3d = object3d;
-        // components that should be called each frame
+        // components
         this.components = [];
-        // components that should only do sth when
-        // the gameobject was clicked on
-        this.clicked = [];
         // some tags, to find stuff easier
         this.tags = [];
     }
@@ -34,10 +30,6 @@ export default class GameObject {
         return this.components.find(c => c.type === type);
     }
 
-    getClickComponent(type) {
-        return this.clicked.find(c => c.type === type);
-    }
-
     setOject3D(obj3d) {
         this.obj3d = obj3d;
     }
@@ -48,10 +40,6 @@ export default class GameObject {
 
     addComponent(component) {
         this.components.push(component);
-    }
-
-    addClickComponent(handler) {
-        this.clicked.push(handler);
     }
 
     addTag(tag) {
@@ -74,11 +62,27 @@ export default class GameObject {
      * @param {Number} delta
      */
     update(delta) {
-        this.components.forEach(c => c.call(delta));
+        this.components.forEach(c => c.update(delta));
     }
 
     onClick(button) {
         console.log("GameObject " + this.id + " was clicked")
-        this.clicked.forEach(c => c.call(button));
+        this.components.forEach(c => c.click(button));
+    }
+
+    addPicking(picker) {
+        this.addComponent(picker);
+    }
+
+    hasPicking() {
+        return this.getPicking() !== undefined;
+    }
+
+    getPicking() {
+        return this.getComponent("Picking");
+    }
+
+    getPickingObject() {
+        return this.getComponent("Picking").pickingObj;
     }
 }

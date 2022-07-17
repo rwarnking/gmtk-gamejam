@@ -7,7 +7,7 @@ import Inputs, { MOUSE_BUTTON } from './core/inputs'
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    let last, delta, gameOver = false;
+    let last, delta, gameOver = false, loading = false;
 
     function animate(timestamp) {
 
@@ -18,16 +18,19 @@ document.addEventListener("DOMContentLoaded", function() {
             delta = timestamp - last;
         }
 
-        Inputs.update();
-        GAME.sceneMgr().update(delta);
-        GAME.renderer().render(GAME.scene());
-        if (Inputs.isMouseButtonDown(MOUSE_BUTTON.LEFT)) {
-            const pickeid = GAME.renderer().pickingrender(
-                GAME.pickingScene(),
-                Inputs.getMousePosition(MOUSE_BUTTON.LEFT)
-            );
-            if (pickeid > 0) {
-                GAME.sceneMgr().pickObject(pickeid, MOUSE_BUTTON.LEFT);
+        if (!loading) {
+
+            GAME.renderer().render(GAME.scene());
+            Inputs.update();
+            GAME.sceneMgr().update(delta);
+            if (Inputs.isMouseButtonDown(MOUSE_BUTTON.LEFT)) {
+                const pickeid = GAME.renderer().pickingrender(
+                    GAME.pickingScene(),
+                    Inputs.getMousePosition(MOUSE_BUTTON.LEFT)
+                );
+                if (pickeid > 0) {
+                    GAME.sceneMgr().pickObject(pickeid, MOUSE_BUTTON.LEFT);
+                }
             }
         }
 
@@ -40,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             setTimeout(function() {
                 console.log("loading next level");
+                loading = true;
                 gameOver = false;
                 GAME.loadNextLevel();
             }, 1000);

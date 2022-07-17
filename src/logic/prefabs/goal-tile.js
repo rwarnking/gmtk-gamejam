@@ -5,13 +5,13 @@ import { CELL } from "./tile";
 
 export default class GoalTile extends Component {
 
-    constructor(obj, func=null) {
-        super(obj, func, "GoalTile");
+    constructor(obj) {
+        super(obj, null, null, "GoalTile");
         obj.setCellType(CELL.GOAL);
         this.updateTexture();
     }
 
-    static create(obj, n) {
+    static create(obj) {
         return new GoalTile(obj);
     }
 

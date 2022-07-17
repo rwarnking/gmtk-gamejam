@@ -1,21 +1,36 @@
 export default class Component {
 
-    constructor(gameobject, func=null, type="Component") {
+    constructor(gameobject, uFunc=null, cFunc=null, type="Component") {
         this.type = type;
         this.obj = gameobject;
-        this.func = func;
+        this.uFunc = uFunc;
+        this.cFunc = cFunc;
     }
 
     /**
      *
      */
-    call(param) {
-        if (this.func !== null) {
-            this.func(this.obj, param);
+    update(param) {
+        if (this.uFunc !== null) {
+            this.uFunc(this.obj, param);
+        }
+    }
+
+    click(param) {
+        if (this.cFunc !== null) {
+            this.cFunc(this.obj, param);
         }
     }
 
     onEnter() {}
 
     onLeave() {}
+
+    setUpdateFunc(func) {
+        this.uFunc = func;
+    }
+
+    setClickFunc(func) {
+        this.cFunc = func;
+    }
 }

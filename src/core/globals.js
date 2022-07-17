@@ -58,6 +58,12 @@ const GAME = (function() {
             smgr.loadNextLevel();
         },
 
+        restartLevel: function() {
+            logic.reset();
+            Inputs.unlockAll();
+            smgr.restartLevel();
+        }
+
     }
 }());
 

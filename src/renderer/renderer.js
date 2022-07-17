@@ -41,7 +41,7 @@ export default class Renderer {
     }
 
     // https://r105.threejsfundamentals.org/threejs/lessons/threejs-picking.html
-    pickingrender(scene, cssPosition) {
+    pickingrender(scene, mouse) {
         this.pixelBuffer = new Uint8Array(4);
         // render the scene
         this.renderer.setRenderTarget(this.pickingTexture);
@@ -51,8 +51,8 @@ export default class Renderer {
         //read the pixel
         this.renderer.readRenderTargetPixels(
             this.pickingTexture,
-            cssPosition[0],               // x
-            this.height-cssPosition[1],   // y
+            mouse[0],               // x
+            this.height-mouse[1],   // y
             1,   // width
             1,   // height
             this.pixelBuffer

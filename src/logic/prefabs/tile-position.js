@@ -4,7 +4,7 @@ import Component from "../component";
 export default class TilePosition extends Component {
 
     constructor(obj, x, y, z, func) {
-        super(obj, func, "TilePosition");
+        super(obj, func, null, "TilePosition");
         this.isMoving = false;
         this.setPosition(x, y, z);
     }

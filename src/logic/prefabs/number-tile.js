@@ -5,8 +5,8 @@ import TAGS from "../enums/tags";
 
 export default class NumberTile extends Component {
 
-    constructor(obj, n, func=null) {
-        super(obj, func, "NumberTile");
+    constructor(obj, n) {
+        super(obj, null, null, "NumberTile");
         this.n = n;
         this.prevTexture = obj.getObject3D().material.map;
         obj.addTag(TAGS.DICE_NUMBER);
