@@ -85,7 +85,7 @@ function level1() {
 }
 
 function level2() {
-    const a = 5, b = 15;
+    const a = 6, b = 6;
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
     // const tiles = makeTileRagged(a, b);
@@ -94,9 +94,11 @@ function level2() {
     const idx = chance.pickset(allIdx, 3)
     const idxObstacle = chance.pickset(allIdx.filter(i => !idx.includes(i)), 2);
 
-    // tiles[idx[0]].addComponent(GoalTile.create(tiles[idx[0]]));
-    // tiles[idx[1]].addComponent(NumberTile.create(tiles[idx[1]], 6));
-    const startPos = tiles[idx[2]].getTilePosition();
+    tiles[16].addComponent(GoalTile.create(tiles[16]));
+    tiles[11].addComponent(NumberTile.create(tiles[11], 4));
+    tiles[4].addComponent(NumberTile.create(tiles[4], 5));
+    tiles[7].addComponent(NumberTile.create(tiles[7], 6));
+    const startPos = tiles[19].getTilePosition();
 
     const objects = [
         createPlayer(startPos[0], startPos[1], startPos[2]),
