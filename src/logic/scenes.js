@@ -201,6 +201,62 @@ function level3() {
 }
 
 function level4() {
+    const w = 30, h = 30;
+    const list = [
+        [0, 5], [1, 4], [1, 3], [2, 2],
+        [0, 8], [0, 7], [1, 6], [1, 5], [2, 4], [2, 3], [3, 2], [3, 1],
+        [0, 10], [0, 9], [1, 8], [1, 7], [3, 4], [3, 3], [4, 2], [4, 1],
+        [0, 11], [1, 10], [3, 5], [4, 3], [5, 2],
+        [1, 12], [1, 11], [4, 6], [5, 4], [5, 3],
+        [1, 13], [2, 12], [2, 11], [3, 10], [4, 7], [5, 6], [5, 5], [6, 4],
+        [2, 13], [3, 12], [3, 11], [4, 10], [4, 9], [5, 8], [5, 7], [6, 6],
+        [4, 12], [4, 11], [5, 10], [5, 9],
+    ];
+    const tiles = makeTileList(list);
+
+    tiles[48].addComponent(GoalTile.create(tiles[48]));
+    tiles[10].addComponent(NumberTile.create(tiles[10], 1));
+    tiles[25].addComponent(NumberTile.create(tiles[25], 2));
+    tiles[19].addComponent(NumberTile.create(tiles[19], 3));
+    tiles[34].addComponent(NumberTile.create(tiles[34], 4));
+    tiles[41].addComponent(NumberTile.create(tiles[41], 5));
+    tiles[5].addComponent(NumberTile.create(tiles[5], 6));
+    const startPos = tiles[1].getTilePosition();
+
+    setTileToObstacle(tiles[7]);
+    setTileToObstacle(tiles[15]);
+    setTileToObstacle(tiles[17]);
+    setTileToObstacle(tiles[20]);
+    setTileToObstacle(tiles[30]);
+    setTileToObstacle(tiles[32]);
+    setTileToObstacle(tiles[35]);
+    // setTileToObstacle(tiles[37]);
+
+    const objects = [
+        createPlayer(
+            startPos[0], startPos[1], startPos[2]
+        ),
+        createBackground()
+    ];
+
+    return {
+        tiles: tiles,
+        objects: objects,
+        width: w,
+        height: h,
+        depth: 1,
+        settings: {
+            startNumbers: [],
+            goalNumbers: [1,2,3,4,5,6],
+            constraints: [
+                // TODO: ?!
+                // CONSTRAINTS.LIKE_REAL_DICE
+            ]
+        }
+    };
+}
+
+function level5() {
     const w = 15, h = 15;
     const list = [
         [0, 1], [0, 2],
@@ -266,7 +322,7 @@ function level4() {
     };
 }
 
-function level5() {
+function level6() {
     const a = 8, b = 7;
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
@@ -290,12 +346,12 @@ function level5() {
     tiles[35].addComponent(NumberTile.create(tiles[35], 4));
     tiles[42].addComponent(NumberTile.create(tiles[42], 5));
 
-    tiles[7].addComponent(NumberTile.create(tiles[13], 5));
-    tiles[14].addComponent(NumberTile.create(tiles[20], 4));
-    tiles[21].addComponent(NumberTile.create(tiles[27], 3));
-    tiles[28].addComponent(NumberTile.create(tiles[34], 2));
-    tiles[35].addComponent(NumberTile.create(tiles[41], 1));
-    tiles[42].addComponent(NumberTile.create(tiles[48], 6));
+    tiles[13].addComponent(NumberTile.create(tiles[13], 5));
+    tiles[20].addComponent(NumberTile.create(tiles[20], 4));
+    tiles[27].addComponent(NumberTile.create(tiles[27], 3));
+    tiles[34].addComponent(NumberTile.create(tiles[34], 2));
+    tiles[41].addComponent(NumberTile.create(tiles[41], 1));
+    tiles[48].addComponent(NumberTile.create(tiles[48], 6));
 
     tiles[1].addComponent(NumberTile.create(tiles[1], 5));
     tiles[2].addComponent(NumberTile.create(tiles[2], 4));
@@ -338,4 +394,4 @@ function level5() {
     };
 }
 
-export { level1, level2, level3, level4, level5 };
+export { level1, level2, level3, level4, level5, level6 };
