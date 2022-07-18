@@ -9,6 +9,7 @@ export default function createBackground() {
     obj.addComponent(TextureCycle.createCycle(
         obj,
         [
+            // "assets/background/sky-simple.png",
             "assets/background/1.png",
             "assets/background/2.png",
             "assets/background/3.png",

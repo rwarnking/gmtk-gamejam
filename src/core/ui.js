@@ -2,6 +2,7 @@ import * as THREE from "three"
 import Component from "../logic/component";
 import TextureCycle from "../logic/prefabs/texture-cycle";
 import UIElement from "../logic/prefabs/ui-element";
+import Events from "./events";
 import GAME from "./globals";
 import Inputs from "./inputs";
 
@@ -53,8 +54,7 @@ export default class UI {
             }
         })
         const last = this.elements[0];
-        last.getPicking()
-            .setClickFunc(GAME.restartLevel);
+        last.getPicking().setClickFunc(GAME.restartLevel);
         last.addComponent(TextureCycle.createToggle(
             last,
             ["assets/sprites/restart-button_up.png", "assets/sprites/restart-button_down.png"],
@@ -64,13 +64,14 @@ export default class UI {
         if (this.tutorial) {
             this.tutorial = false;
             const fairy = this.elements[1];
+
             fairy.getObject3D().scale.set(6, 4, 1);
             const maxLife = 40000, threshold = 1000;
             fairy.life = maxLife;
             fairy.one = false;
 
             const killComp = new Component(fairy, function(_, delta) {
-                if (fairy.life <= 0) return;
+                if (fairy.life <= 0 || fairy.dead) return;
 
                 fairy.life -= delta;
 
@@ -81,18 +82,26 @@ export default class UI {
                     const frac = fairy.life / threshold;
                     fairy.getObject3D().material.opacity = frac;
                     if (frac <= 0) {
-                        fairy.getObject3D().removeFromParent();
+                        fairy.dead = true;
+                        fairy.life = 0;
+                        Events.emit("removeGameObject", fairy);
                     }
                 }
 
-                if (Inputs.isKeyDown("KeyW") || Inputs.isKeyDown("KeyA")
-                || Inputs.isKeyDown("KeyS") || Inputs.isKeyDown("KeyD")
+                if (Inputs.isKeyDown("KeyW") || Inputs.isKeyDown("KeyA") ||
+                    Inputs.isKeyDown("KeyS") || Inputs.isKeyDown("KeyD")
                 ) {
-                    fairy.getObject3D().removeFromParent();
                     fairy.dead = true;
                     fairy.life = 0;
+                    Events.emit("removeGameObject", fairy);
                 }
             })
+
+            // TODO: this does not work for some reason
+            fairy.getPicking().setClickFunc(function() {
+                console.log("click");
+                Events.emit("removeGameObject", fairy)
+            });
             fairy.addComponent(killComp);
         }
     }

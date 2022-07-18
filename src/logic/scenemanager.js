@@ -27,6 +27,10 @@ export default class SceneManager {
         this.levelData = null;
         this.bgColor = new THREE.Color(29/255, 133/255, 181/255);
         this.bgObj = null;
+
+        Events.on("removeGameObject", obj => {
+            this.removeGameObject(obj);
+        })
     }
 
     setupScene(levelData) {
@@ -130,20 +134,22 @@ export default class SceneManager {
         this.pickingScene.add(object.getPickingObject());
     }
 
-    removeGameObject(id) {
-        const idx = this.objects.findIndex(o => o.id === id);
+    removeGameObject(obj) {
+        if (obj.hasObject3D()) {
+            obj.getObject3D().removeFromParent();
+        }
+        const idx = this.objects.findIndex(o => o.id === obj.id);
         if (idx >= 0) {
-            this.scene.remove(this.objects[idx].getObject3D());
-            this.objects.splice(index, 1);
+            this.objects.splice(idx, 1);
         }
     }
 
-    updateGameObject3D(object, obj3Dold, obj3Dnew) {
-        const idx = this.objects.findIndex(o => o.id === object.id);
-        if (idx >= 0) {
-            this.scene.remove(obj3Dold);
-            this.scene.add(obj3Dnew);
+    updateGameObject3D(obj, obj3Dnew) {
+        if (obj.hasObject3D()) {
+            obj.getObject3D().removeFromParent();
         }
+        obj.setObject3D(obj3Dnew);
+        this.scene.add(obj3Dnew);
     }
 
     update(delta) {

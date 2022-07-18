@@ -327,6 +327,7 @@ function level6() {
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
 
+
     tiles[6].addComponent(GoalTile.create(tiles[6]));
     tiles[50].addComponent(NumberTile.create(tiles[50], 1));
     tiles[51].addComponent(NumberTile.create(tiles[51], 2));
