@@ -118,8 +118,6 @@ function level2() {
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
 
-    TileLevel.initCenter(a, b);
-
     tiles[16].addComponent(GoalTile.create(tiles[16]));
     tiles[11].addComponent(NumberTile.create(tiles[11], 4));
     tiles[4].addComponent(NumberTile.create(tiles[4], 5));
@@ -154,8 +152,6 @@ function level3() {
     const a = 6, b = 10;
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
-
-    TileLevel.initCenter(a, b);
 
     tiles[47].addComponent(GoalTile.create(tiles[47]));
     tiles[26].addComponent(NumberTile.create(tiles[26], 1));
@@ -274,8 +270,6 @@ function level5() {
     ];
     const tiles = makeTileList(list);
 
-    TileLevel.initCenter(w, h);
-
     tiles[23].addComponent(GoalTile.create(tiles[23]));
     // tiles[15].addComponent(NumberTile.create(tiles[15], 1));
     tiles[28].addComponent(NumberTile.create(tiles[28], 1));
@@ -332,8 +326,6 @@ function level6() {
     const a = 8, b = 7;
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
-
-    TileLevel.initCenter(a, b);
 
     tiles[6].addComponent(GoalTile.create(tiles[6]));
     tiles[50].addComponent(NumberTile.create(tiles[50], 1));

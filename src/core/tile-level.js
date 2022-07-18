@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import Tile, { CELL } from "../logic/prefabs/tile";
+import GAME from './globals';
 
 let CX = -3, CY = -3;
 
@@ -77,17 +78,18 @@ export default class TileLevel {
     }
 
     static calculate3DPosition(x, y, z, type=CELL.DEFAULT) {
-        const l = -3;
+        const l = GAME.CX();
+        const b = GAME.CY();
         switch (type) {
             case CELL.WATER:
             case CELL.OBSTACLE: return [
                 y % 2 == 0 ? l + x : l + 0.5 + x,
-                -2 + y * 0.25 * 0.75 + 0.25,
+                b + y * 0.25 * 0.75 + 0.25,
                 z
             ]
             default: return [
                 y % 2 == 0 ? l + x : l + 0.5 + x,
-                -2 + y * 0.25 * 0.75,
+                b + y * 0.25 * 0.75,
                 z
             ];
         }

@@ -1,8 +1,16 @@
 import TAGS from "../logic/enums/tags";
 import AudioManager from "./audio";
 import Inputs from "./inputs";
+import Events from "./events";
 
 const GAME = (function() {
+
+    const gameDims = {
+        cx: -3,
+        cy: -3,
+        w: 6,
+        h: 6,
+    }
 
     let renderer, smgr, logic, audioMgr;
 
@@ -13,6 +21,8 @@ const GAME = (function() {
             renderer.setupRenderer();
             smgr = smgrObject
             logic = logicObject;
+
+            Events.on("setGameDims", this.setGameDims)
 
             this.loadLevel(0);
 
@@ -72,7 +82,34 @@ const GAME = (function() {
             const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
             logic.init(levelData.settings, player);
             setTimeout(() => smgr.applyNextScene(), 200);
-        }
+        },
+
+        setGameDims(data) {
+            gameDims.w = data.w;
+            gameDims.h = data.h;
+            // gameDims.cx = -data.w * (data.w === data.h ?
+                // 0.5 :
+                // (data.w < data.h ? 0.6 : 0.3));
+            gameDims.cx = -data.w * 0.5;//data.w < 10 ? Math.floor(-data.w * 0.5) :  Math.floor(-data.w  * 0.5);
+            gameDims.cy = -1;
+            renderer.camera.position.z = Math.round(Math.max(data.w, data.h) / 50) + 5;
+        },
+
+        CX() {
+            return gameDims.cx;
+        },
+
+        CY() {
+            return gameDims.cy;
+        },
+
+        W() {
+            return gameDims.w;
+        },
+
+        H() {
+            return gameDims.h;
+        },
 
     }
 }());

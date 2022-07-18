@@ -8,8 +8,8 @@ import Inputs from "./inputs";
 const UI_POSITIONS = [
     // [-2.0, 3.0],
     // [-1.0, 3.0],
-    [2.5, 3.0],
-    [-3.0, -2.0],
+    [["right", 5], ["top", 3]],
+    [["left", 3], ["bottom", 2]],
 ];
 const UI_TEXTURES = [
     // "assets/sprites/dice-preview.png",
@@ -25,13 +25,29 @@ export default class UI {
         this.tutorial = true;
     }
 
+    static setPosX(anchor, offset) {
+        switch (anchor) {
+            default:
+            case "left": return -offset;
+            case "right": return offset;
+        }
+    }
+
+    static setPosY(anchor, offset) {
+        switch (anchor) {
+            default:
+            case "top": return offset;
+            case "bottom": return -offset;
+        }
+    }
+
     init() {
         this.elements = [];
         UI_POSITIONS.forEach((pos, i) => {
             if (i !== 1 || this.tutorial) {
                 this.elements.push(new UIElement(
-                    pos[0],
-                    pos[1],
+                    UI.setPosX(pos[0][0], pos[0][1]),
+                    UI.setPosY(pos[1][0], pos[1][1]),
                     UI_TEXTURES[i]
                 ));
             }
@@ -52,6 +68,7 @@ export default class UI {
             const maxLife = 40000, threshold = 1000;
             fairy.life = maxLife;
             fairy.one = false;
+
             const killComp = new Component(fairy, function(_, delta) {
                 if (fairy.life <= 0) return;
 

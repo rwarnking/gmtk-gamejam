@@ -1,15 +1,16 @@
 import * as THREE from 'three';
+import Events from '../core/events';
 import TileLevel from '../core/tile-level';
 import UI from '../core/ui';
 import TAGS from './enums/tags';
 import { level2, level3, level4, level5, level6 } from './scenes';
 
 const LEVELS = [
-    level2,
-    level3,
-    level4,
-    level5,
-    level6,
+    { init: level2, w: 6, h: 6 }, // w & h are hard coded to centering works
+    { init: level3, w: 7, h: 10 },
+    { init: level4, w: 5, h: 6 },
+    { init: level5, w: 4, h: 5 },
+    { init: level6, w: 7, h: 7 },
 ];
 
 export default class SceneManager {
@@ -26,7 +27,6 @@ export default class SceneManager {
         this.levelData = null;
         this.bgColor = new THREE.Color(29/255, 133/255, 181/255);
         this.bgObj = null;
-        this.player = null;
     }
 
     setupScene(levelData) {
@@ -97,7 +97,11 @@ export default class SceneManager {
     loadLevel(index) {
         if (index >= 0 && index < LEVELS.length) {
             this.level = index;
-            const levelData = LEVELS[this.level]();
+            Events.emit("setGameDims", {
+                w: LEVELS[this.level].w,
+                h: LEVELS[this.level].h,
+            })
+            const levelData = LEVELS[this.level].init();
             this.setupScene(levelData);
             return levelData;
         }
