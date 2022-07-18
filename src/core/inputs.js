@@ -126,6 +126,10 @@ class InputHandler {
     isMouseButtonDown(button) {
         if (this.isMouseLocked()) return false;
 
+        if (button === undefined) {
+            return Object.values(MOUSE_BUTTON).some(b => this.isMouseButtonDown(b));
+        }
+
         if (!this.mouseDown[button].locked && this.mouseDown[button].time !== undefined) {
             const pressed = this.onTime(this.mouseDown[button].time);
 

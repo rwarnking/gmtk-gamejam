@@ -1,6 +1,5 @@
 import GAME from "../../core/globals";
 import Component from "../component";
-import TAGS from "../enums/tags";
 
 export default class WaterTile extends Component {
 
@@ -16,6 +15,7 @@ export default class WaterTile extends Component {
         // play sound
         GAME.audio().playEffect("SPLASH")
         // remove number from dice
+        GAME.logic().dice.removeNumber();
     }
 
 }

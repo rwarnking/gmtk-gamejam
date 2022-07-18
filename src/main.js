@@ -2,7 +2,7 @@
 import GAME from './core/globals';
 import Renderer from "./renderer/renderer";
 import SceneManager from "./logic/scenemanager";
-import Logic from "./logic/logic";
+import Logic from "./core/logic";
 import Inputs, { MOUSE_BUTTON } from './core/inputs'
 
 document.addEventListener("DOMContentLoaded", function() {

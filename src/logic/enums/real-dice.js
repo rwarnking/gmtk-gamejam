@@ -1,25 +1,43 @@
 const REAL_DICE = Object.freeze({
     0: 6,
     1: 3,
-    2: 5,
-    3: 1,
-    4: 2,
-    5: 4,
-})
-
-const REAL_DICE_REVERSE = {};
-Object.entries(REAL_DICE).forEach(([k, v]) => {
-    REAL_DICE_REVERSE[v] = k;
+    2: 1,
+    3: 4,
+    4: 5,
+    5: 2,
 });
 
-// left - right - top - bttom
-const NEIGHBORS = {
-    1: [3, 4, 5, 2],
-    2: [3, 4, 6, 1],
-    3: [6, 1, 5, 2],
-    4: [1, 6, 5, 2],
-    5: [3, 4, 2, 1],
-    6: [4, 3, 5, 2],
-};
+const DICE_POS =  Object.freeze({
+    TOP: 2,
+    LEFT: 1,
+    RIGHT: 5,
+    BACK_RIGHT: 3,
+    BACK_LEFT: 4,
+    BOTTOM: 0
+});
 
-export { REAL_DICE as default, REAL_DICE_REVERSE, NEIGHBORS };
+const DICE_MOVE_H = [
+    DICE_POS.BOTTOM, DICE_POS.LEFT,
+    DICE_POS.TOP, DICE_POS.BACK_RIGHT,
+];
+const DICE_MOVE_V = [
+    DICE_POS.BOTTOM, DICE_POS.BACK_LEFT,
+    DICE_POS.TOP, DICE_POS.RIGHT,
+];
+
+function decrement(array, pos) {
+    return array[pos == 0 ? array.length-1 : pos-1];
+}
+
+function increment(array, pos) {
+    return array[pos == array.length-1 ? 0 : pos+1]
+}
+
+export {
+    REAL_DICE as default,
+    DICE_POS,
+    DICE_MOVE_H,
+    DICE_MOVE_V,
+    decrement,
+    increment,
+};

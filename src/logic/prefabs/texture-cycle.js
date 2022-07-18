@@ -65,11 +65,11 @@ export default class TextureCycle extends Component {
                 } else {
                     this.last = undefined;
                     this.first = undefined;
+                    this.index = 0;
                     this.animate = false;
                     this.flip = false;
                     this.backwards = false;
                     this.step = 1;
-                    this.index = 0;
                     this.setTexture(this.textures[0])
                 }
             }

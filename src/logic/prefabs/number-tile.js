@@ -48,6 +48,9 @@ export default class NumberTile extends Component {
         if (this.canCollect()) {
             GAME.logic().addNumberDirect(this.n);
             this.collect();
+        } else {
+            // TODO: should be play a sound?
+            // GAME.audio().playEffect("FAIL");
         }
     }
 
@@ -57,12 +60,7 @@ export default class NumberTile extends Component {
     }
 
     canCollect() {
-        return !this.isEmpty() && !this.direction !== null &&
-            GAME.logic().canAddNumber(this.direction, this.n);
-    }
-
-    setIncomingDirection(direction) {
-        this.direction = direction;
+        return !this.isEmpty() && GAME.logic().canAddNumber(this.n);
     }
 
     isEmpty() {

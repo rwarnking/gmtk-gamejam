@@ -59,11 +59,7 @@ export default class SceneManager {
         this.bgObj = null;
 
         this.objects.forEach(o => {
-            if (o.hasComponent("Dice")) {
-                // add dice planes
-                const dice = o.getComponent("Dice");
-                dice.getPlanes().forEach(p => scene.add(p));
-            } else if (o.hasComponent("NumberTile")) {
+            if (o.hasComponent("NumberTile")) {
                 // add number tile stuff
                 const nt = o.getComponent("NumberTile");
                 scene.add(nt.topping);

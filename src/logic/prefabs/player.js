@@ -13,7 +13,7 @@ import MODS from '../enums/mods';
 import DIRECTION from '../enums/direction';
 import Dice from './dice';
 
-function createPlayer(x, y, z, startNumber) {
+function createPlayer(x, y, z, diceStart) {
 
     const texture = new THREE.TextureLoader().load(
         'assets/sprites/dice_base_128x127_t.png'
@@ -99,20 +99,15 @@ function createPlayer(x, y, z, startNumber) {
         if (move) {
 
             if (!tc.isMoving) {
-                // if the next tile is a number tile, tell it how we want to move there
-                const numTile = tile.getComponent("NumberTile");
-                if (numTile) {
-                    numTile.setIncomingDirection(dir);
-                }
-
-                currTile.removeModifier(MODS.PLAYER);
-                tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
-                obj.getComponent("TextureCycle").setAnimate(backwards, flip);
-                tile.addModifier(MODS.PLAYER);
-
+                // CARE: dice component has to move first
                 const dice = obj.getComponent("Dice");
                 dice.move(dir);
                 GAME.audio().playEffect("ROLL");
+
+                tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
+                currTile.removeModifier(MODS.PLAYER);
+                tile.addModifier(MODS.PLAYER);
+                obj.getComponent("TextureCycle").setAnimate(backwards, flip);
             }
         }
     }));
@@ -126,12 +121,16 @@ function createPlayer(x, y, z, startNumber) {
             "assets/sprites/dice_tl2_128x127.png",
             "assets/sprites/dice_tl3_128x127.png",
             "assets/sprites/dice_tl4_128x127.png",
-            // "assets/sprites/dice_tl5_128x127.png",
+            "assets/sprites/dice_tl5_128x127.png",
         ],
-        duration -  100
+        Math.round(duration * 0.5)
     ));
 
-    obj.addComponent(Dice.create(obj, startNumber))
+    if (diceStart) {
+        obj.addComponent(Dice.create(obj, diceStart[0], diceStart[1], diceStart[2]))
+    } else {
+        obj.addComponent(Dice.create(obj))
+    }
 
     return obj;
 }

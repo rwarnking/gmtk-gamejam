@@ -44,6 +44,7 @@ export default class TilePosition extends Component {
                         (this.direction === DIRECTION.LEFT || this.direction === DIRECTION.UP)
                     ) {
                         obj3d.renderOrder = this.renderOrder;
+                        obj3d.children.forEach(c => c.renderOrder = this.renderOrder);
                     }
                 } else {
                     this.last = undefined;
@@ -65,6 +66,7 @@ export default class TilePosition extends Component {
 
         if (this.direction === DIRECTION.RIGHT || this.direction === DIRECTION.DOWN) {
             this.obj.getObject3D().renderOrder = this.renderOrder;
+            this.obj.getObject3D().children.forEach(c => c.renderOrder = this.renderOrder);
         }
     }
 

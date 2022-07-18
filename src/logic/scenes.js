@@ -127,7 +127,7 @@ function level2() {
     setTileToObstacle(tiles[3]);
 
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2]),
+        createPlayer(startPos[0], startPos[1], startPos[2], [1, 3, 2]),
         createBackground()
     ];
 
@@ -142,7 +142,7 @@ function level2() {
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -179,7 +179,7 @@ function level3() {
     setTileToObstacle(tiles[56]);
 
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2], 1),
+        createPlayer(startPos[0], startPos[1], startPos[2], [1, 3, 2]),
         createBackground()
     ];
 
@@ -194,7 +194,7 @@ function level3() {
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -233,9 +233,7 @@ function level4() {
     // setTileToObstacle(tiles[37]);
 
     const objects = [
-        createPlayer(
-            startPos[0], startPos[1], startPos[2]
-        ),
+        createPlayer(startPos[0], startPos[1], startPos[2]),
         createBackground()
     ];
 
@@ -250,7 +248,7 @@ function level4() {
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -299,9 +297,7 @@ function level5() {
     setTileToWater(tiles[39]);
 
     const objects = [
-        createPlayer(
-            startPos[0], startPos[1], startPos[2]
-        ),
+        createPlayer(startPos[0], startPos[1], startPos[2]),
         createBackground()
     ];
 
@@ -316,7 +312,7 @@ function level5() {
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -382,10 +378,11 @@ function level6() {
         depth: 1,
         settings: {
             startNumbers: [1],
+            diceStart: [6, 0, 0], // top left right
             goalNumbers: [1, 2, 3, 4, 5, 6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };

@@ -89,7 +89,8 @@ export default class UI {
                 }
 
                 if (Inputs.isKeyDown("KeyW") || Inputs.isKeyDown("KeyA") ||
-                    Inputs.isKeyDown("KeyS") || Inputs.isKeyDown("KeyD")
+                    Inputs.isKeyDown("KeyS") || Inputs.isKeyDown("KeyD") ||
+                    Inputs.isMouseButtonDown()
                 ) {
                     fairy.dead = true;
                     fairy.life = 0;
@@ -97,9 +98,7 @@ export default class UI {
                 }
             })
 
-            // TODO: this does not work for some reason
             fairy.getPicking().setClickFunc(function() {
-                console.log("click");
                 Events.emit("removeGameObject", fairy)
             });
             fairy.addComponent(killComp);
