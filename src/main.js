@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // check if game/level is over
         if (!gameOver && GAME.logic().isOver()) {
-            GAME.audiolistener().playwin();
+            GAME.audio().playEffect("WIN");
             gameOver = true;
             console.log("game is over");
             Inputs.clear();

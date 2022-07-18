@@ -68,13 +68,18 @@ export default class TileLevel {
         CY = - Math.floor(height * 0.5);
     }
 
-    static calcRenderOrder(x, y, z, h=200) {
+    static calcRenderOrder(x, y, z, h=1000) {
         return (h-y) * 2;
+    }
+
+    static calcRenderOrderPlayer(x, y, z, h=1000) {
+        return (h-y) * 2 + 1;
     }
 
     static calculate3DPosition(x, y, z, type=CELL.DEFAULT) {
         const l = -3;
         switch (type) {
+            case CELL.WATER:
             case CELL.OBSTACLE: return [
                 y % 2 == 0 ? l + x : l + 0.5 + x,
                 -2 + y * 0.25 * 0.75 + 0.25,
@@ -100,7 +105,6 @@ export default class TileLevel {
                     'assets/sprites/obstacle_128x127_t.png',
                     'assets/sprites/rock-cracks_128x127_t.png',
                     'assets/sprites/stone_128x127_t.png',
-                    'assets/sprites/water_128x127_t.png',
                 ];
 
                 const tex = Math.floor(Math.random() * texArray.length);
@@ -113,6 +117,13 @@ export default class TileLevel {
                 pos = TileLevel.calculate3DPosition(x, y, z, type)
                 texture = new THREE.TextureLoader().load(
                     'assets/sprites/rainbow-goal_128x64_t.png'
+                );
+            } break;
+            case CELL.WATER: {
+                height = 1.0;
+                pos = TileLevel.calculate3DPosition(x, y, z, type)
+                texture = new THREE.TextureLoader().load(
+                    'assets/sprites/water_128x127_t.png'
                 );
             } break;
             default: {

@@ -7,7 +7,7 @@ const CELL = Object.freeze({
     OBSTACLE: 1,
     COLLECTIBLE: 2,
     GOAL: 3,
-    START: 4
+    WATER: 4,
 });
 
 class Tile extends GameObject {

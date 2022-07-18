@@ -8,10 +8,14 @@ export default class TextureCycle extends Component {
         super(obj, ufunc, cfunc, "TextureCycle");
         this.textures = textures;
         if (typeof(textures[0]) === "string") {
-            this.textures = textures.map(t => new THREE.TextureLoader().load(t))
+            this.textures = textures.map(t => {
+                const tex = new THREE.TextureLoader().load(t)
+                tex.center = new THREE.Vector2(0.5, 0.5);
+                return tex;
+            });
         }
         this.duration = duration;
-        this.timeStep = this.duration / textures.length;
+        this.timeStep = Math.round(this.duration / (textures.length-1));
         this.fromStart = fromStart;
         this.animate = false;
         this.index = 0;
@@ -24,16 +28,14 @@ export default class TextureCycle extends Component {
 
     static createCycle(obj, textures, duration, fromStart=true) {
         return new TextureCycle(obj, textures, duration, fromStart, function() {
-            if (this.first === undefined) {
-                this.first = Date.now();
-                this.last = this.first;
+            if (this.last === undefined) {
+                this.last = Date.now();
             }
 
             const now = Date.now();
-            const d0 = now - this.first;
-            const d1 = now - this.last;
+            const d = now - this.last;
 
-            if ((d0 <= this.duration || this.index < this.textures.length-1) && d1 >= this.timeStep) {
+            if (d >= this.timeStep) {
                 this.setNextTexture();
                 this.last = now;
             }
@@ -44,20 +46,31 @@ export default class TextureCycle extends Component {
         return new TextureCycle(obj, textures, duration, true, function() {
             if (this.animate) {
 
+                let once = false;
                 if (this.first === undefined) {
                     this.first = Date.now();
                     this.last = this.first;
+                    once = true;
                 }
 
                 const now = Date.now();
-                const d1 = now - this.last;
+                const d0 = now - this.last;
+                const d1 = now - this.first;
 
-                if (this.index < this.textures.length && d1 >= this.timeStep) {
-                    this.setNextTexture();
-                    this.last = now;
-                    if (!this.animate) {
-                        this.setTexture(this.textures[0])
+                if (d1 <= this.duration) {
+                    if (once || d0 >= this.timeStep) {
+                        this.setNextTexture();
+                        this.last = now;
                     }
+                } else {
+                    this.last = undefined;
+                    this.first = undefined;
+                    this.animate = false;
+                    this.flip = false;
+                    this.backwards = false;
+                    this.step = 1;
+                    this.index = 0;
+                    this.setTexture(this.textures[0])
                 }
             }
 
@@ -100,7 +113,6 @@ export default class TextureCycle extends Component {
             if (this.index > this.textures.length-1 || this.index < 0) {
                 this.index = 0;
                 this.animate = false;
-                this.first = undefined;
             }
         } else {
             if (this.index === this.textures.length-1) {
@@ -119,17 +131,17 @@ export default class TextureCycle extends Component {
 
     setTexture(texture) {
         if (this.obj.hasObject3D()) {
-            this.obj.getObject3D().material.map = texture;
 
+            const material = this.obj.getObject3D().material;
             if (this.flip) {
-                this.obj.getObject3D().material.map.center = new THREE.Vector2(0.5, 0.5);
-                this.obj.getObject3D().material.map.wrapS = THREE.RepeatWrapping;
-                this.obj.getObject3D().material.map.repeat.x = - 1;
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.repeat.x = -1;
             } else {
-                this.obj.getObject3D().material.map.center = new THREE.Vector2(0.5, 0.5);
-                this.obj.getObject3D().material.map.repeat.x = 1;
+                texture.wrapS = THREE.ClampToEdgeWrapping;
+                texture.repeat.x = 1;
             }
-            this.obj.getObject3D().material.needsUpdate = true;
+            material.map = texture;
+            material.needsUpdate = true;
         }
     }
 

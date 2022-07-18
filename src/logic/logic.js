@@ -50,7 +50,7 @@ export default class Logic {
         this.goalReached = value;
         console.log(value ? "goal reached" : "goal left");
         if (value && !this.isOver()) {
-            GAME.audiolistener().playnowin();
+            GAME.audio().playEffect("FAIL");
             console.log("still missing numbers");
         }
     }
@@ -70,10 +70,10 @@ export default class Logic {
     }
 
     addNumberDirect(number) {
-        console.log("number " + number + " wan be added");
+        console.log("number " + number + " was be added");
         this.numbersCollected.add(number);
         this.dice.addNumber(number);
-        GAME.audiolistener().playcollect();
+        GAME.audio().playEffect("COLLECT");
         return true;
     }
 

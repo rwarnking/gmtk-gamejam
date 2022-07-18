@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import Chance from 'chance';
 import GameObject from "./gameobject";
 import Tile from "./prefabs/tile";
 import TileLevel from '../core/tile-level';
@@ -12,6 +11,7 @@ import GoalTile from './prefabs/goal-tile';
 import createBackground from './prefabs/background';
 
 import CONSTRAINTS from "./enums/constraints"
+import WaterTile from './prefabs/water-tile';
 
 function makeTileRect(b, t) {
     const tiles = [];
@@ -56,7 +56,6 @@ function makeTileList(array) {
 
 function makeTileRagged(w, h) {
     const tiles = [];
-
     for (let i = 0; i < w; ++i) {
         for (let j = 0; j < h; ++j) {
             tiles.push(new Tile([i, j, 0], CELL.DEFAULT));
@@ -78,11 +77,12 @@ function setTileToObstacle(t) {
 }
 
 function setTileToWater(t) {
-    t.setCellType(CELL.OBSTACLE);
+    t.setCellType(CELL.WATER);
     t.setOject3D(TileLevel.makeTileObject3D(
         t.position[0], t.position[1], 0,
-        CELL.OBSTACLE,
+        CELL.WATER,
     ));
+    t.addComponent(WaterTile.create(t));
 }
 
 function level1() {

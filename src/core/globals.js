@@ -1,10 +1,10 @@
 import TAGS from "../logic/enums/tags";
-import AudioListener from "../logic/audio";
+import AudioManager from "./audio";
 import Inputs from "./inputs";
 
 const GAME = (function() {
 
-    let renderer, smgr, logic, audiolistener;
+    let renderer, smgr, logic, audioMgr;
 
     return {
 
@@ -14,16 +14,13 @@ const GAME = (function() {
             smgr = smgrObject
             logic = logicObject;
 
-            const levelData = smgr.loadNextLevel()
-            const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
-            logic.init(levelData.settings, player);
+            this.loadLevel(0);
 
-            audiolistener = new AudioListener();
-            //audiolistener.changevolume(0.05);
+            audioMgr = new AudioManager();
         },
 
-        audiolistener: function(){
-            return audiolistener;
+        audio: function() {
+            return audioMgr;
         },
 
         renderer: function() {
@@ -50,13 +47,22 @@ const GAME = (function() {
             return smgr.pickingScene;
         },
 
+        loadLevel: function(index) {
+            logic.reset();
+            Inputs.unlockAll();
+            const levelData = smgr.loadLevel(index);
+            const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
+            logic.init(levelData.settings, player);
+            setTimeout(() => smgr.applyNextScene(), 200);
+        },
+
         loadNextLevel: function() {
             logic.reset();
             Inputs.unlockAll();
             const levelData = smgr.loadNextLevel();
             const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
             logic.init(levelData.settings, player);
-            setTimeout(() => smgr.applyNextScene(), 500);
+            setTimeout(() => smgr.applyNextScene(), 200);
         },
 
         restartLevel: function() {
@@ -65,7 +71,7 @@ const GAME = (function() {
             const levelData = smgr.restartLevel();
             const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
             logic.init(levelData.settings, player);
-            setTimeout(() => smgr.applyNextScene(), 500);
+            setTimeout(() => smgr.applyNextScene(), 200);
         }
 
     }

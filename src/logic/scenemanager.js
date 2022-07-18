@@ -26,9 +26,11 @@ export default class SceneManager {
         this.levelData = null;
         this.bgColor = new THREE.Color(29/255, 133/255, 181/255);
         this.bgObj = null;
+        this.player = null;
     }
 
     setupScene(levelData) {
+
         this.objects = [];
         // create tile game objects in tile-level
         this.tileLevel.initFromArray(

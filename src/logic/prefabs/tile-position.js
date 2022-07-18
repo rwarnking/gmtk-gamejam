@@ -8,13 +8,11 @@ export default class TilePosition extends Component {
     constructor(obj, x, y, z, func, duration=250) {
         super(obj, func, null, "TilePosition");
         this.isMoving = false;
-        this.duration = duration;
+        this.duration = duration; // in ms
         this.count = 1;
         this.direction = DIRECTION.NONE;
         this.position = new THREE.Vector3(0,0,0);
-        this.renderOrder = TileLevel.calcRenderOrder(
-            this.x, this.y, this.z
-        ) - 1;
+        this.renderOrder = TileLevel.calcRenderOrderPlayer(this.x, this.y, this.z);
         this.setPosition(x, y, z);
         this.obj.getObject3D().position.set(
             this.position.x,
@@ -25,23 +23,31 @@ export default class TilePosition extends Component {
     }
 
     static create(obj, x, y, z, duration) {
-        return new TilePosition(obj, x, y, z, function(obj) {
-            if (this.isMoving && this.count <= this.duration) {
-                obj.getObject3D().position.lerp(
-                    this.position,
-                    this.count++ / this.duration
-                );
-                this.count = this.count+1;
-                if (this.count > this.duration) {
-                    this.count = 1;
-                    this.isMoving = false;
-                    if (this.callback) {
-                        this.callback();
+        return new TilePosition(obj, x, y, z, function(obj, delta) {
+            if (this.isMoving) {
+
+                if (this.last === undefined) {
+                    this.last = Date.now();
+                }
+
+                const now = Date.now();
+                const d = now - this.last;
+                const obj3d = obj.getObject3D();
+
+                if (d <= this.duration) {
+                    const frac = d / this.duration;
+                    obj3d.position.lerp(
+                        this.position,
+                        frac
+                    );
+                    if (+frac.toFixed(1) === 0.5 &&
+                        (this.direction === DIRECTION.LEFT || this.direction === DIRECTION.UP)
+                    ) {
+                        obj3d.renderOrder = this.renderOrder;
                     }
-                } else if (this.count === Math.floor(this.duration * 0.5) &&
-                    (this.direction === DIRECTION.UP || this.direction === DIRECTION.LEFT)
-                ) {
-                    obj.getObject3D().renderOrder = this.renderOrder;
+                } else {
+                    this.last = undefined;
+                    this.isMoving = false;
                 }
             }
         }, duration);
@@ -57,19 +63,15 @@ export default class TilePosition extends Component {
         this.position.y = pos[1] + 0.175
         this.position.z = pos[2]
 
-        if (this.isMoving && (this.direction === DIRECTION.DOWN || this.direction === DIRECTION.RIGHT)) {
+        if (this.direction === DIRECTION.RIGHT || this.direction === DIRECTION.DOWN) {
             this.obj.getObject3D().renderOrder = this.renderOrder;
         }
     }
 
-    move(direction, pos, renderOrder) {
+    move(direction, pos) {
         this.isMoving = true;
         this.direction = direction;
-        this.renderOrder = renderOrder;
-        if (Array.isArray(pos)) {
-            this.setPosition(pos[0], pos[1], pos[2]);
-        } else {
-            this.setPosition(pos, y, z);
-        }
+        this.renderOrder = TileLevel.calcRenderOrderPlayer(pos[0], pos[1], pos[2]);
+        this.setPosition(pos[0], pos[1], pos[2]);
     }
 }

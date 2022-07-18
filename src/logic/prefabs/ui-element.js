@@ -16,7 +16,7 @@ export default class UIElement extends GameObject {
         });
         const sprite = new THREE.Sprite(material)
         sprite.position.set(x, y, 0);
-        sprite.renderOrder = 1000;
+        sprite.renderOrder = 2000;
         return sprite;
     }
 }
