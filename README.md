@@ -7,9 +7,10 @@
 
 ## Description
 This project contains our game idea for the GMTK Game Jam 2022.
+You can find a playable version of this game on [here](https://waehlis.itch.io/nombers).
 
 <p float="left">
-  <img src="docs/images/latest.png" alt="image of the game" width="27%" />
+  <img src="docs/images/latest.png" alt="image of the game" width="35%" />
 </p>
 
 ## Table of Contents
@@ -61,9 +62,9 @@ This project was developed by:
 - [Hannah](https://github.com/htscode)
 - [lwarnking](https://github.com/lwarnking)
 - [rwarnking](https://github.com/rwarnking)
-- Annalena
-- Ellen
-- [HendrikBrueckler](https://github.com/HendrikBrueckler)
+- Annalena U.
+- Ellen W.
+- ([HendrikBrueckler](https://github.com/HendrikBrueckler))
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
