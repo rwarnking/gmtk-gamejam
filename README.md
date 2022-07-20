@@ -1,6 +1,6 @@
 # GMTK Game Jam 2022
 
-[<img alt="Build status" src="https://img.shields.io/github/workflow/status/rwarnking/gmtk-gamejam/Compile%20Evaluation%20Sheet?label=Build&logo=github&style=for-the-badge" height="23">](https://github.com/rwarnking/gmtk-gamejam/actions/workflows/compile.yml)
+[<img alt="Build status" src="https://img.shields.io/github/workflow/status/rwarnking/gmtk-gamejam/Compile%20Project%20Files?label=Build&logo=github&style=for-the-badge" height="23">](https://github.com/rwarnking/gmtk-gamejam/actions/workflows/compile.yml)
 [<img alt="Linting status of master" src="https://img.shields.io/github/workflow/status/rwarnking/gmtk-gamejam/Lint%20Code%20Base?label=Linter&style=for-the-badge" height="23">](https://github.com/marketplace/actions/super-linter)
 [<img alt="Version" src="https://img.shields.io/github/v/release/rwarnking/gmtk-gamejam?style=for-the-badge" height="23">](https://github.com/rwarnking/gmtk-gamejam/releases/latest)
 [<img alt="Licence" src="https://img.shields.io/github/license/rwarnking/gmtk-gamejam?style=for-the-badge" height="23">](https://github.com/rwarnking/gmtk-gamejam/blob/main/LICENSE)

@@ -1,0 +1,60 @@
+############################
+############################
+## Compile GitHub Actions ##
+############################
+############################
+name: Compile Project Files
+
+#
+# Documentation:
+# https://github.com/actions/setup-node
+#
+
+################################
+# Start the job on push to dev #
+################################
+on:
+  push:
+    branches-ignore: []
+    # Remove the line above to run when pushing to master
+  pull_request:
+    branches: [main]
+
+###############
+# Set the Job #
+###############
+jobs:
+  build_bundle:
+    # Name the Job
+    name: Compile Project Files
+    # Set the agent to run on
+    runs-on: ubuntu-latest
+
+    ##################
+    # Load all steps #
+    ##################
+    steps:
+      ##########################
+      # Checkout the code base #
+      ##########################
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+      ###################
+      # Install Node.js #
+      ###################
+      - name: Install node js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+      #######################
+      # Run bundling script #
+      #######################
+      - name: Run bundling script
+        run: npm run build
+      # Check if dunle exists
+      - name: Check file existence
+        uses: andstor/file-existence-action@v1
+        with:
+          files: dist/bundle.js
