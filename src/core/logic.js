@@ -71,7 +71,7 @@ export default class Logic {
     }
 
     addNumberDirect(number) {
-        console.log("number " + number + " was be added");
+        console.log("number " + number + " was added");
         this.numbersCollected.add(number);
         this.dice.addNumber(number);
         GAME.audio().playEffect("COLLECT");

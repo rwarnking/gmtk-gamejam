@@ -1,5 +1,5 @@
 import GameObject from "../gameobject";
-import TextureCycle from "./texture-cycle";
+import TextureCycle from "../components/texture-cycle";
 import TAGS from "../enums/tags";
 
 export default function createBackground() {

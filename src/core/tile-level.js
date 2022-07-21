@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Tile, { CELL } from "../logic/prefabs/tile";
+import Tile, { CELL } from "../logic/gameobjects/tile";
 import GAME from './globals';
 
 let CX = -3, CY = -3;

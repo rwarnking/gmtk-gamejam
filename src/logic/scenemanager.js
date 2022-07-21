@@ -6,7 +6,7 @@ import TAGS from './enums/tags';
 import { level2, level3, level4, level5, level6 } from './scenes';
 
 const LEVELS = [
-    { init: level2, w: 6, h: 6 }, // w & h are hard coded to centering works
+    { init: level2, w: 6, h: 6 }, // w & h are hard coded to make centering work
     { init: level3, w: 7, h: 10 },
     { init: level4, w: 5, h: 6 },
     { init: level5, w: 4, h: 5 },

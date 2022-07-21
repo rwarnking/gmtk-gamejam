@@ -182,13 +182,6 @@ export default class Dice extends Component {
     }
 
     canAddNumber(number, mustBeOpposite=false) {
-        console.log(
-            this.isEmpty(),
-            mustBeOpposite,
-            this.getNumber(DICE_POS.TOP) === null ||
-            this.getOppositeNumber(number) === this.getNumber(DICE_POS.TOP) ||
-            !this.numbers.has(this.getNumber(DICE_POS.TOP))
-        );
         return this.isEmpty() && (!mustBeOpposite ||
             (this.getNumber(DICE_POS.TOP) === null ||
             this.getOppositeNumber(number) === this.getNumber(DICE_POS.TOP) ||

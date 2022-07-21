@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import GAME from "../../core/globals";
 import Component from "../component";
-import { CELL } from "./tile";
+import { CELL } from "../gameobjects/tile";
 
 export default class GoalTile extends Component {
 

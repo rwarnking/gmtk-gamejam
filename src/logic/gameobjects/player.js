@@ -5,13 +5,13 @@ import Inputs from "../../core/inputs";
 import GameObject from '../gameobject';
 import Component from "../component";
 
-import TilePosition from "./tile-position";
-import TextureCycle from "./texture-cycle";
+import TilePosition from "../components/tile-position";
+import TextureCycle from "../components/texture-cycle";
 
 import TAGS from "../enums/tags";
 import MODS from '../enums/mods';
 import DIRECTION from '../enums/direction';
-import Dice from './dice';
+import Dice from '../components/dice';
 
 function createPlayer(x, y, z, diceStart) {
 

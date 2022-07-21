@@ -1,17 +1,16 @@
 import * as THREE from 'three';
 import GameObject from "./gameobject";
-import Tile from "./prefabs/tile";
+import Tile, { CELL } from "./gameobjects/tile";
 import TileLevel from '../core/tile-level';
-import { CELL } from './prefabs/tile';
 import Component from './component';
 import Inputs, { MOUSE_BUTTON } from '../core/inputs';
-import createPlayer from "./prefabs/player";
-import NumberTile from './prefabs/number-tile';
-import GoalTile from './prefabs/goal-tile';
+import createPlayer from "./gameobjects/player";
+import NumberTile from './components/number-tile';
+import GoalTile from './components/goal-tile';
 import createBackground from './prefabs/background';
 
 import CONSTRAINTS from "./enums/constraints"
-import WaterTile from './prefabs/water-tile';
+import WaterTile from './components/water-tile';
 
 function makeTileRect(b, t) {
     const tiles = [];

@@ -73,6 +73,11 @@ export default class GameObject {
         this.components.forEach(c => c.update(delta));
     }
 
+    /**
+     * This method is called if the GameObject has a Picking Component
+     * and was clicked on with the mouse
+     * @param {Number} button
+     */
     onClick(button) {
         this.components.forEach(c => c.click(button));
     }
