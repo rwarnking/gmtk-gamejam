@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import Chance from 'chance';
 import GameObject from "./gameobject";
 import Tile from "./prefabs/tile";
 import TileLevel from '../core/tile-level';
@@ -12,6 +11,7 @@ import GoalTile from './prefabs/goal-tile';
 import createBackground from './prefabs/background';
 
 import CONSTRAINTS from "./enums/constraints"
+import WaterTile from './prefabs/water-tile';
 
 function makeTileRect(b, t) {
     const tiles = [];
@@ -56,7 +56,6 @@ function makeTileList(array) {
 
 function makeTileRagged(w, h) {
     const tiles = [];
-
     for (let i = 0; i < w; ++i) {
         for (let j = 0; j < h; ++j) {
             tiles.push(new Tile([i, j, 0], CELL.DEFAULT));
@@ -78,11 +77,12 @@ function setTileToObstacle(t) {
 }
 
 function setTileToWater(t) {
-    t.setCellType(CELL.OBSTACLE);
+    t.setCellType(CELL.WATER);
     t.setOject3D(TileLevel.makeTileObject3D(
         t.position[0], t.position[1], 0,
-        CELL.OBSTACLE,
+        CELL.WATER,
     ));
+    t.addComponent(WaterTile.create(t));
 }
 
 function level1() {
@@ -118,8 +118,6 @@ function level2() {
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
 
-    TileLevel.initCenter(a, b);
-
     tiles[16].addComponent(GoalTile.create(tiles[16]));
     tiles[11].addComponent(NumberTile.create(tiles[11], 4));
     tiles[4].addComponent(NumberTile.create(tiles[4], 5));
@@ -129,7 +127,7 @@ function level2() {
     setTileToObstacle(tiles[3]);
 
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2]),
+        createPlayer(startPos[0], startPos[1], startPos[2], [1, 3, 2]),
         createBackground()
     ];
 
@@ -144,7 +142,7 @@ function level2() {
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -154,8 +152,6 @@ function level3() {
     const a = 6, b = 10;
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
-
-    TileLevel.initCenter(a, b);
 
     tiles[47].addComponent(GoalTile.create(tiles[47]));
     tiles[26].addComponent(NumberTile.create(tiles[26], 1));
@@ -183,7 +179,7 @@ function level3() {
     setTileToObstacle(tiles[56]);
 
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2], 1),
+        createPlayer(startPos[0], startPos[1], startPos[2], [1, 3, 2]),
         createBackground()
     ];
 
@@ -198,7 +194,7 @@ function level3() {
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -237,9 +233,7 @@ function level4() {
     // setTileToObstacle(tiles[37]);
 
     const objects = [
-        createPlayer(
-            startPos[0], startPos[1], startPos[2]
-        ),
+        createPlayer(startPos[0], startPos[1], startPos[2]),
         createBackground()
     ];
 
@@ -254,7 +248,7 @@ function level4() {
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -273,8 +267,6 @@ function level5() {
         [3, 9], [4, 8],
     ];
     const tiles = makeTileList(list);
-
-    TileLevel.initCenter(w, h);
 
     tiles[23].addComponent(GoalTile.create(tiles[23]));
     // tiles[15].addComponent(NumberTile.create(tiles[15], 1));
@@ -305,9 +297,7 @@ function level5() {
     setTileToWater(tiles[39]);
 
     const objects = [
-        createPlayer(
-            startPos[0], startPos[1], startPos[2]
-        ),
+        createPlayer(startPos[0], startPos[1], startPos[2]),
         createBackground()
     ];
 
@@ -322,7 +312,7 @@ function level5() {
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };
@@ -333,7 +323,6 @@ function level6() {
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
 
-    TileLevel.initCenter(a, b);
 
     tiles[6].addComponent(GoalTile.create(tiles[6]));
     tiles[50].addComponent(NumberTile.create(tiles[50], 1));
@@ -389,10 +378,11 @@ function level6() {
         depth: 1,
         settings: {
             startNumbers: [1],
+            diceStart: [6, 0, 0], // top left right
             goalNumbers: [1, 2, 3, 4, 5, 6],
             constraints: [
                 // TODO: ?!
-                // CONSTRAINTS.LIKE_REAL_DICE
+                CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
     };

@@ -13,7 +13,7 @@ import MODS from '../enums/mods';
 import DIRECTION from '../enums/direction';
 import Dice from './dice';
 
-function createPlayer(x, y, z, startNumber) {
+function createPlayer(x, y, z, diceStart) {
 
     const texture = new THREE.TextureLoader().load(
         'assets/sprites/dice_base_128x127_t.png'
@@ -23,18 +23,23 @@ function createPlayer(x, y, z, startNumber) {
         map: texture,
         transparent: true,
     });
+
+    // material.depthTest = false;
+    // material.depthWrite = false;
+    // material.side = THREE.DoubleSide
+
     const cube = new THREE.Mesh(geometry, material);
     const obj = new GameObject(cube);
     obj.addTag(TAGS.PLAYER);
 
     const tl = GAME.tileLevel();
-    const duration = 500;
+    const duration = 350; // move animation duration in ms
 
     // add tile position component
     obj.addComponent(TilePosition.create(
         obj,
         x, y, z,
-        Math.floor(duration * 0.33)
+        duration
     ));
 
     // input controller component
@@ -57,7 +62,7 @@ function createPlayer(x, y, z, startNumber) {
                 dir = DIRECTION.UP;
                 flip = true;
             } else {
-                GAME.audiolistener().playbump();
+                GAME.audio().playEffect("BUMP");
             }
         } else if (Inputs.isKeyDown("KeyS")) {
             tile = tl.getTileDown(tc.x, tc.y, tc.z);
@@ -68,7 +73,7 @@ function createPlayer(x, y, z, startNumber) {
                 backwards = true;
                 flip = true;
             } else {
-                GAME.audiolistener().playbump();
+                GAME.audio().playEffect("BUMP");
             }
         } else if (Inputs.isKeyDown("KeyD")) {
             tile = tl.getTileRight(tc.x, tc.y, tc.z);
@@ -78,7 +83,7 @@ function createPlayer(x, y, z, startNumber) {
                 backwards = true;
                 dir = DIRECTION.RIGHT;
             } else {
-                GAME.audiolistener().playbump();
+                GAME.audio().playEffect("BUMP");
             }
         } else if (Inputs.isKeyDown("KeyA")) {
             tile = tl.getTileLeft(tc.x, tc.y, tc.z);
@@ -87,26 +92,23 @@ function createPlayer(x, y, z, startNumber) {
                 move = true;
                 dir = DIRECTION.LEFT;
             } else {
-                GAME.audiolistener().playbump();
+                GAME.audio().playEffect("BUMP");
             }
         }
 
         if (move) {
-            obj.getComponent("TextureCycle").setAnimate(backwards, flip);
-            currTile.removeModifier(MODS.PLAYER);
-            tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
-            tile.addModifier(MODS.PLAYER);
 
-            // if the next tile is a number tile, tell it how we want to move there
-            const numTile = tile.getComponent("NumberTile");
-            if (numTile) {
-                numTile.setIncomingDirection(dir);
+            if (!tc.isMoving) {
+                // CARE: dice component has to move first
+                const dice = obj.getComponent("Dice");
+                dice.move(dir);
+                GAME.audio().playEffect("ROLL");
+
+                tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
+                currTile.removeModifier(MODS.PLAYER);
+                tile.addModifier(MODS.PLAYER);
+                obj.getComponent("TextureCycle").setAnimate(backwards, flip);
             }
-
-            const dice = obj.getComponent("Dice");
-            dice.move(dir);
-            GAME.audiolistener().playroll();
-
         }
     }));
 
@@ -121,10 +123,14 @@ function createPlayer(x, y, z, startNumber) {
             "assets/sprites/dice_tl4_128x127.png",
             "assets/sprites/dice_tl5_128x127.png",
         ],
-        duration
+        Math.round(duration * 0.5)
     ));
 
-    obj.addComponent(Dice.create(obj, startNumber))
+    if (diceStart) {
+        obj.addComponent(Dice.create(obj, diceStart[0], diceStart[1], diceStart[2]))
+    } else {
+        obj.addComponent(Dice.create(obj))
+    }
 
     return obj;
 }

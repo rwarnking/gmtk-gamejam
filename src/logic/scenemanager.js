@@ -1,15 +1,16 @@
 import * as THREE from 'three';
+import Events from '../core/events';
 import TileLevel from '../core/tile-level';
 import UI from '../core/ui';
 import TAGS from './enums/tags';
 import { level2, level3, level4, level5, level6 } from './scenes';
 
 const LEVELS = [
-    level2,
-    level3,
-    level4,
-    level5,
-    level6,
+    { init: level2, w: 6, h: 6 }, // w & h are hard coded to centering works
+    { init: level3, w: 7, h: 10 },
+    { init: level4, w: 5, h: 6 },
+    { init: level5, w: 4, h: 5 },
+    { init: level6, w: 7, h: 7 },
 ];
 
 export default class SceneManager {
@@ -26,9 +27,14 @@ export default class SceneManager {
         this.levelData = null;
         this.bgColor = new THREE.Color(29/255, 133/255, 181/255);
         this.bgObj = null;
+
+        Events.on("removeGameObject", obj => {
+            this.removeGameObject(obj);
+        })
     }
 
     setupScene(levelData) {
+
         this.objects = [];
         // create tile game objects in tile-level
         this.tileLevel.initFromArray(
@@ -53,11 +59,7 @@ export default class SceneManager {
         this.bgObj = null;
 
         this.objects.forEach(o => {
-            if (o.hasComponent("Dice")) {
-                // add dice planes
-                const dice = o.getComponent("Dice");
-                dice.getPlanes().forEach(p => scene.add(p));
-            } else if (o.hasComponent("NumberTile")) {
+            if (o.hasComponent("NumberTile")) {
                 // add number tile stuff
                 const nt = o.getComponent("NumberTile");
                 scene.add(nt.topping);
@@ -95,7 +97,11 @@ export default class SceneManager {
     loadLevel(index) {
         if (index >= 0 && index < LEVELS.length) {
             this.level = index;
-            const levelData = LEVELS[this.level]();
+            Events.emit("setGameDims", {
+                w: LEVELS[this.level].w,
+                h: LEVELS[this.level].h,
+            })
+            const levelData = LEVELS[this.level].init();
             this.setupScene(levelData);
             return levelData;
         }
@@ -124,20 +130,22 @@ export default class SceneManager {
         this.pickingScene.add(object.getPickingObject());
     }
 
-    removeGameObject(id) {
-        const idx = this.objects.findIndex(o => o.id === id);
+    removeGameObject(obj) {
+        if (obj.hasObject3D()) {
+            obj.getObject3D().removeFromParent();
+        }
+        const idx = this.objects.findIndex(o => o.id === obj.id);
         if (idx >= 0) {
-            this.scene.remove(this.objects[idx].getObject3D());
-            this.objects.splice(index, 1);
+            this.objects.splice(idx, 1);
         }
     }
 
-    updateGameObject3D(object, obj3Dold, obj3Dnew) {
-        const idx = this.objects.findIndex(o => o.id === object.id);
-        if (idx >= 0) {
-            this.scene.remove(obj3Dold);
-            this.scene.add(obj3Dnew);
+    updateGameObject3D(obj, obj3Dnew) {
+        if (obj.hasObject3D()) {
+            obj.getObject3D().removeFromParent();
         }
+        obj.setObject3D(obj3Dnew);
+        this.scene.add(obj3Dnew);
     }
 
     update(delta) {

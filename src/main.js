@@ -2,7 +2,7 @@
 import GAME from './core/globals';
 import Renderer from "./renderer/renderer";
 import SceneManager from "./logic/scenemanager";
-import Logic from "./logic/logic";
+import Logic from "./core/logic";
 import Inputs, { MOUSE_BUTTON } from './core/inputs'
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // check if game/level is over
         if (!gameOver && GAME.logic().isOver()) {
-            GAME.audiolistener().playwin();
+            GAME.audio().playEffect("WIN");
             gameOver = true;
             console.log("game is over");
             Inputs.clear();

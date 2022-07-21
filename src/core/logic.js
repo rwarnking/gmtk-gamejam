@@ -1,6 +1,5 @@
-import GAME from "../core/globals";
-import CONSTRAINTS from "./enums/constraints";
-import REAL_DICE from "./enums/real-dice";
+import GAME from "./globals";
+import CONSTRAINTS from "../logic/enums/constraints";
 
 export default class Logic {
 
@@ -36,10 +35,8 @@ export default class Logic {
     setPlayer(player) {
         this.player = player;
         this.dice = player.getComponent("Dice");
-        let i = 0;
-        this.numbersCollected.forEach(n=> {
-            this.dice.addNumber(n, i++ == this.numbersCollected.size-1);
-        });
+        this.numbersCollected.forEach(n=> this.dice.addNumberOnly(n));
+        this.dice.updateTextures();
     }
 
     getPlayer() {
@@ -50,30 +47,34 @@ export default class Logic {
         this.goalReached = value;
         console.log(value ? "goal reached" : "goal left");
         if (value && !this.isOver()) {
-            GAME.audiolistener().playnowin();
+            GAME.audio().playEffect("FAIL");
             console.log("still missing numbers");
         }
     }
 
-    canAddNumber(direction, number) {
+    canAddNumber(number) {
         if (this.constraints.includes(CONSTRAINTS.LIKE_REAL_DICE)) {
-            return this.dice.goalNumberFromDirection(direction) === number;
+            if (this.dice.moreThanOneBottomOption()) {
+                return this.dice.canAddNumber(number, true) &&
+                    this.dice.getBottomOptions().includes(number);
+            }
+            return this.dice.canAddNumber(number, true);
         }
-        return true;
+        return this.dice.canAddNumber(number);
     }
 
-    addNumber(direction, number) {
-        if (this.canAddNumber(direction, number)) {
+    addNumber(number) {
+        if (this.canAddNumber(number)) {
             return this.addNumberDirect(number);
         }
         return false;
     }
 
     addNumberDirect(number) {
-        console.log("number " + number + " wan be added");
+        console.log("number " + number + " was be added");
         this.numbersCollected.add(number);
         this.dice.addNumber(number);
-        GAME.audiolistener().playcollect();
+        GAME.audio().playEffect("COLLECT");
         return true;
     }
 
@@ -86,17 +87,9 @@ export default class Logic {
         return true;
     }
 
-    diceFaceHasNumber(index, number) {
-        return this.dice.getFaceNumber(index) === number;
-    }
-
     testConstraint(constraint) {
         switch(constraint) {
-            case CONSTRAINTS.LIKE_REAL_DICE: {
-                return Object.entries(REAL_DICE[0]).every(([i, v]) => {
-                    return this.diceFaceHasNumber(i, v)
-                });
-            }
+            default: return true;
         }
     }
 
