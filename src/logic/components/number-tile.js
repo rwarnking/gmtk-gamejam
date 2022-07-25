@@ -9,21 +9,10 @@ export default class NumberTile extends Component {
         super(obj, null, null, "NumberTile");
         this.n = n;
         this.direction = null;
-        this.topping = NumberTile.makeTopping(n);
-        const objpos = obj.getObject3D().position;
-        this.topping.position.set(
-            objpos.x,
-            objpos.y,
-            objpos.z,
-        );
-        this.topping.renderOrder = obj.getObject3D().renderOrder;
-
+        this.nObj = NumberTile.makeTopping(n);
+        this.nObj.renderOrder = obj.getObject3D().renderOrder;
+        obj.getObject3D().add(this.nObj);
         obj.addTag(TAGS.DICE_NUMBER);
-        const tex = new THREE.TextureLoader().load(
-            'assets/sprites/dirt-gras_128x64_t.png'
-        );
-        obj.getObject3D().material.map = tex;
-        obj.getObject3D().material.needsUpdate = true
     }
 
     static create(obj, n) {
@@ -34,11 +23,12 @@ export default class NumberTile extends Component {
         const texture = new THREE.TextureLoader().load(
             `assets/sprites/numbers/${n}.png`
         );
-        const geometry = new THREE.PlaneGeometry(1, 0.5);
+        const geometry = new THREE.PlaneGeometry(1, 1);
         const material = new THREE.MeshBasicMaterial({
             map: texture,
             transparent: true
         })
+        material.map.center = new THREE.Vector2(0.5, 0.5);
         const plane = new THREE.Mesh(geometry, material);
         return plane;
     }
@@ -48,15 +38,12 @@ export default class NumberTile extends Component {
         if (this.canCollect()) {
             GAME.logic().addNumberDirect(this.n);
             this.collect();
-        } else {
-            // TODO: should be play a sound?
-            // GAME.audio().playEffect("FAIL");
         }
     }
 
     collect() {
         this.n = null;
-        this.topping.removeFromParent();
+        this.nObj.removeFromParent();
     }
 
     canCollect() {

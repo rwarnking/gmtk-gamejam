@@ -7,11 +7,12 @@ import Component from "../component";
 
 import TilePosition from "../components/tile-position";
 import TextureCycle from "../components/texture-cycle";
+import Dice from '../components/dice';
 
 import TAGS from "../enums/tags";
 import MODS from '../enums/mods';
 import DIRECTION from '../enums/direction';
-import Dice from '../components/dice';
+import Events from '../../core/events';
 
 function createPlayer(x, y, z, diceStart) {
 
@@ -104,9 +105,15 @@ function createPlayer(x, y, z, diceStart) {
                 dice.move(dir);
                 GAME.audio().playEffect("ROLL");
 
-                tc.move(dir, tile.getTilePosition(), tile.getObject3D().renderOrder+1);
+                tc.move(
+                    dir,
+                    tile.getTilePosition(),
+                    tile.getObject3D().renderOrder+1
+                );
                 currTile.removeModifier(MODS.PLAYER);
                 tile.addModifier(MODS.PLAYER);
+                Events.emit("playerMoved", dice.getFaces());
+
                 obj.getComponent("TextureCycle").setAnimate(backwards, flip);
             }
         }
@@ -126,11 +133,13 @@ function createPlayer(x, y, z, diceStart) {
         Math.round(duration * 0.5)
     ));
 
+    let dice;
     if (diceStart) {
-        obj.addComponent(Dice.create(obj, diceStart[0], diceStart[1], diceStart[2]))
+        dice = obj.addComponent(Dice.create(obj, diceStart))
     } else {
-        obj.addComponent(Dice.create(obj))
+        dice = obj.addComponent(Dice.create(obj))
     }
+    Events.emit("playerMoved", dice.getFaces());
 
     return obj;
 }

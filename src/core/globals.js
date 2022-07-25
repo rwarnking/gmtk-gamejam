@@ -17,6 +17,7 @@ const GAME = (function() {
     return {
 
         init: function(rendererObject, smgrObject, logicObject) {
+            audioMgr = new AudioManager();
             renderer = rendererObject;
             renderer.setupRenderer();
             smgr = smgrObject
@@ -25,8 +26,6 @@ const GAME = (function() {
             Events.on("setGameDims", this.setGameDims)
 
             this.loadLevel(0);
-
-            audioMgr = new AudioManager();
         },
 
         audio: function() {
@@ -58,30 +57,43 @@ const GAME = (function() {
         },
 
         loadLevel: function(index) {
+            if (smgr.getCurrentLevelIndex() === index) {
+                return;
+            }
+
             logic.reset();
-            Inputs.unlockAll();
+            Inputs.lockAll();
             const levelData = smgr.loadLevel(index);
             const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
             logic.init(levelData.settings, player);
-            setTimeout(() => smgr.applyNextScene(), 200);
+            setTimeout(() => {
+                smgr.applyNextScene();
+                Inputs.unlockAll();
+            }, 200);
         },
 
         loadNextLevel: function() {
             logic.reset();
-            Inputs.unlockAll();
+            Inputs.lockAll();
             const levelData = smgr.loadNextLevel();
             const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
             logic.init(levelData.settings, player);
-            setTimeout(() => smgr.applyNextScene(), 200);
+            setTimeout(() => {
+                smgr.applyNextScene();
+                Inputs.unlockAll();
+            }, 200);
         },
 
         restartLevel: function() {
             logic.reset();
-            Inputs.unlockAll();
+            Inputs.lockAll();
             const levelData = smgr.restartLevel();
             const player = smgr.objects.find(obj => obj.hasTag(TAGS.PLAYER));
             logic.init(levelData.settings, player);
-            setTimeout(() => smgr.applyNextScene(), 200);
+            setTimeout(() => {
+                smgr.applyNextScene();
+                Inputs.unlockAll();
+            }, 200);
         },
 
         setGameDims(data) {
@@ -91,7 +103,7 @@ const GAME = (function() {
                 // 0.5 :
                 // (data.w < data.h ? 0.6 : 0.3));
             gameDims.cx = -data.w * 0.5;//data.w < 10 ? Math.floor(-data.w * 0.5) :  Math.floor(-data.w  * 0.5);
-            gameDims.cy = -1;
+            gameDims.cy = -data.h * 0.5;
             renderer.camera.position.z = Math.round(Math.max(data.w, data.h) / 50) + 5;
         },
 

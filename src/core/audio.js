@@ -1,13 +1,15 @@
 import * as THREE from 'three';
+import $ from 'cash-dom'
 
-import { EFFECTS, SONGS, EFFECT_VOL_MOD } from '../logic/enums/sounds';
+import { EFFECTS, SONGS, EFFECT_VOL_MOD, EFFECT_SPEED_MOD } from '../logic/enums/sounds';
 
 export default class AudioManager {
 
-    constructor(songVolume=0.07, effectVolume=0.25) {
+    constructor(songVolume=0.1, effectVolume=0.25) {
         this.audiolistener = new THREE.AudioListener();
         this.loader = new THREE.AudioLoader();
 
+        this.muted = false;
         this.songVolume = songVolume;
         this.effectVolume = effectVolume;
 
@@ -27,12 +29,14 @@ export default class AudioManager {
             if (!interacted) {
                 interacted = true;
                 this.playSong(0);
-                window.removeEventListener("onmousemove", soundWorkaround);
-                window.removeEventListener("onkeydown", soundWorkaround);
+                $(window).off("mousemove", soundWorkaround);
+                $(window).off("click", soundWorkaround);
+                $(window).off("keydown", soundWorkaround);
             }
         };
-        window.addEventListener("onmousemove", soundWorkaround);
-        window.addEventListener("onkeydown", soundWorkaround);
+        $(window).on("mousemove", soundWorkaround);
+        $(window).on("click", soundWorkaround);
+        $(window).on("keydown", soundWorkaround);
     }
 
     init() {
@@ -46,9 +50,12 @@ export default class AudioManager {
         this.effects.forEach((effect, name) => {
             this.loader.load(EFFECTS[name], buffer => {
                 effect.setBuffer(buffer);
+                if (EFFECT_SPEED_MOD[name] !== undefined) {
+                    effect.playbackRate = EFFECT_SPEED_MOD[name];
+                }
                 effect.setLoop(false);
                 effect.setVolume(
-                    this.effectVolume * EFFECT_VOL_MOD[name]
+                    this.effectVolume * (EFFECT_VOL_MOD[name] !== undefined ? EFFECT_VOL_MOD[name] : 1)
                 );
             });
         });
@@ -65,8 +72,8 @@ export default class AudioManager {
     play(audio) {
         if (audio.isPlaying) {
             audio.stop();
-            audio.currentTime = 0;
         }
+        audio.currentTime = 0;
         audio.play();
     }
 
@@ -94,7 +101,15 @@ export default class AudioManager {
     setEffectVolume(volume) {
         this.effectVolume = volume;
         this.effects.forEach((effect, name) => effect.setVolume(
-            volume * EFFECT_VOL_MOD[name]
+            volume * (EFFECT_VOL_MOD[name] !== undefined ? EFFECT_VOL_MOD[name] : 1)
         ));
     }
+
+    toggleMute() {
+        const volume = this.muted ? this.songVolume : 0;
+        this.songs.forEach(song => song.setVolume(volume));
+        this.effects.forEach(effect => effect.setVolume(volume));
+        this.muted = !this.muted;
+    }
+
 }

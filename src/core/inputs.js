@@ -23,11 +23,6 @@ class InputHandler {
         this.reactionTime = reactionTime;
         // init attributes that save data
         this.reset();
-        this.map = null;
-        // try to get the keyboard map (QWERTY vs. QWERTZ)
-        if (navigator.keyboard) {
-            navigator.keyboard.getLayoutMap().then(map => this.map = map);
-        }
         // register event handlers for key events
         $(window).on("keydown", this.onKeyDown.bind(this));
         $(window).on("keyup", this.onKeyUp.bind(this));

@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import GameObject from "./gameobject";
 import Tile, { CELL } from "./gameobjects/tile";
-import TileLevel from '../core/tile-level';
 import Component from './component';
 import Inputs, { MOUSE_BUTTON } from '../core/inputs';
 import createPlayer from "./gameobjects/player";
@@ -11,6 +10,7 @@ import createBackground from './prefabs/background';
 
 import CONSTRAINTS from "./enums/constraints"
 import WaterTile from './components/water-tile';
+import { DICE_POS } from './enums/real-dice';
 
 function makeTileRect(b, t) {
     const tiles = [];
@@ -22,10 +22,6 @@ function makeTileRect(b, t) {
         let new_x = start_x;
         for (let y = start_y; y < start_y + t; y++) {
             tiles.push(new Tile([new_x, y, 0], CELL.DEFAULT));
-            tiles[tiles.length-1].setOject3D(TileLevel.makeTileObject3D(
-                new_x, y, 0,
-                CELL.DEFAULT,
-            ));
 
             if (y % 2 == 1) {
                 new_x++;
@@ -45,10 +41,6 @@ function makeTileList(array) {
 
     array.forEach(e => {
         tiles.push(new Tile([e[0], e[1], 0], CELL.DEFAULT));
-        tiles[tiles.length-1].setOject3D(TileLevel.makeTileObject3D(
-            e[0], e[1], 0,
-            CELL.DEFAULT,
-        ));
     });
     return tiles;
 }
@@ -58,10 +50,6 @@ function makeTileRagged(w, h) {
     for (let i = 0; i < w; ++i) {
         for (let j = 0; j < h; ++j) {
             tiles.push(new Tile([i, j, 0], CELL.DEFAULT));
-            tiles[tiles.length-1].setOject3D(TileLevel.makeTileObject3D(
-                i, j, 0,
-                CELL.DEFAULT,
-            ));
         }
     }
     return tiles;
@@ -69,19 +57,21 @@ function makeTileRagged(w, h) {
 
 function setTileToObstacle(t) {
     t.setCellType(CELL.OBSTACLE);
-    t.setOject3D(TileLevel.makeTileObject3D(
-        t.position[0], t.position[1], 0,
-        CELL.OBSTACLE,
-    ));
 }
 
 function setTileToWater(t) {
     t.setCellType(CELL.WATER);
-    t.setOject3D(TileLevel.makeTileObject3D(
-        t.position[0], t.position[1], 0,
-        CELL.WATER,
-    ));
     t.addComponent(WaterTile.create(t));
+}
+
+function setTileToNumber(t, n) {
+    t.setCellType(CELL.NUMBER);
+    t.addComponent(NumberTile.create(t, n));
+}
+
+function setTileToGoal(t, n) {
+    t.setCellType(CELL.GOAL);
+    t.addComponent(GoalTile.create(t));
 }
 
 function level1() {
@@ -117,16 +107,19 @@ function level2() {
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
 
-    tiles[16].addComponent(GoalTile.create(tiles[16]));
-    tiles[11].addComponent(NumberTile.create(tiles[11], 4));
-    tiles[4].addComponent(NumberTile.create(tiles[4], 5));
-    tiles[7].addComponent(NumberTile.create(tiles[7], 6));
+    setTileToObstacle(tiles[3]);
+    setTileToNumber(tiles[11], 4);
+    setTileToNumber(tiles[4], 5);
+    setTileToNumber(tiles[7], 6);
+    setTileToGoal(tiles[16]);
     const startPos = tiles[19].getTilePosition();
 
-    setTileToObstacle(tiles[3]);
-
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2], [1, 3, 2]),
+        createPlayer(startPos[0], startPos[1], startPos[2], [
+            { pos: DICE_POS.BOTTOM,    value: 1 },
+            { pos: DICE_POS.LEFT,      value: 2 },
+            { pos: DICE_POS.BACK_LEFT, value: 3 },
+        ]),
         createBackground()
     ];
 
@@ -140,7 +133,6 @@ function level2() {
             startNumbers: [1,2,3],
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
-                // TODO: ?!
                 CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
@@ -151,13 +143,6 @@ function level3() {
     const a = 6, b = 10;
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
-
-    tiles[47].addComponent(GoalTile.create(tiles[47]));
-    tiles[26].addComponent(NumberTile.create(tiles[26], 1));
-    tiles[0].addComponent(NumberTile.create(tiles[0], 2));
-    tiles[51].addComponent(NumberTile.create(tiles[51], 3));
-    tiles[53].addComponent(NumberTile.create(tiles[53], 4));
-    const startPos = tiles[11].getTilePosition();
 
     setTileToObstacle(tiles[12]);
     setTileToObstacle(tiles[15]);
@@ -177,8 +162,20 @@ function level3() {
     setTileToObstacle(tiles[52]);
     setTileToObstacle(tiles[56]);
 
+    setTileToNumber(tiles[26], 1);
+    setTileToNumber(tiles[0],  2);
+    setTileToNumber(tiles[51], 3);
+    setTileToNumber(tiles[53], 4);
+
+    setTileToGoal(tiles[47]);
+
+    const startPos = tiles[11].getTilePosition();
+
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2], [1, 3, 2]),
+        createPlayer(startPos[0], startPos[1], startPos[2], [
+            { pos: DICE_POS.BOTTOM, value: 6 },
+            { pos: DICE_POS.BACK_RIGHT, value: 5 },
+        ]),
         createBackground()
     ];
 
@@ -192,7 +189,6 @@ function level3() {
             startNumbers: [6,5],
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
-                // TODO: ?!
                 CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
@@ -212,14 +208,6 @@ function level4() {
         [4, 12], [4, 11], [5, 10], [5, 9],
     ];
     const tiles = makeTileList(list);
-
-    tiles[48].addComponent(GoalTile.create(tiles[48]));
-    tiles[10].addComponent(NumberTile.create(tiles[10], 1));
-    tiles[25].addComponent(NumberTile.create(tiles[25], 2));
-    tiles[19].addComponent(NumberTile.create(tiles[19], 3));
-    tiles[34].addComponent(NumberTile.create(tiles[34], 4));
-    tiles[41].addComponent(NumberTile.create(tiles[41], 5));
-    tiles[5].addComponent(NumberTile.create(tiles[5], 6));
     const startPos = tiles[1].getTilePosition();
 
     setTileToObstacle(tiles[7]);
@@ -230,6 +218,15 @@ function level4() {
     setTileToObstacle(tiles[32]);
     setTileToObstacle(tiles[35]);
     // setTileToObstacle(tiles[37]);
+
+    setTileToNumber(tiles[10], 1);
+    setTileToNumber(tiles[25], 2);
+    setTileToNumber(tiles[19], 3);
+    setTileToNumber(tiles[34], 4);
+    setTileToNumber(tiles[41], 5);
+    setTileToNumber(tiles[5],  6);
+
+    setTileToGoal(tiles[48]);
 
     const objects = [
         createPlayer(startPos[0], startPos[1], startPos[2]),
@@ -246,7 +243,6 @@ function level4() {
             startNumbers: [],
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
-                // TODO: ?!
                 CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
@@ -266,16 +262,6 @@ function level5() {
         [3, 9], [4, 8],
     ];
     const tiles = makeTileList(list);
-
-    tiles[23].addComponent(GoalTile.create(tiles[23]));
-    // tiles[15].addComponent(NumberTile.create(tiles[15], 1));
-    tiles[28].addComponent(NumberTile.create(tiles[28], 1));
-    tiles[33].addComponent(NumberTile.create(tiles[33], 1));
-    tiles[17].addComponent(NumberTile.create(tiles[17], 2));
-    tiles[9].addComponent(NumberTile.create(tiles[9], 3));
-    tiles[36].addComponent(NumberTile.create(tiles[36], 4));
-    tiles[30].addComponent(NumberTile.create(tiles[30], 5));
-    tiles[22].addComponent(NumberTile.create(tiles[22], 6));
     const startPos = tiles[16].getTilePosition();
 
     setTileToObstacle(tiles[7]);
@@ -295,6 +281,16 @@ function level5() {
     setTileToWater(tiles[38]);
     setTileToWater(tiles[39]);
 
+    setTileToNumber(tiles[28], 1);
+    setTileToNumber(tiles[33], 1);
+    setTileToNumber(tiles[17], 2);
+    setTileToNumber(tiles[9],  3);
+    setTileToNumber(tiles[36], 4);
+    setTileToNumber(tiles[30], 5);
+    setTileToNumber(tiles[22], 6);
+
+    setTileToGoal(tiles[23]);
+
     const objects = [
         createPlayer(startPos[0], startPos[1], startPos[2]),
         createBackground()
@@ -310,7 +306,6 @@ function level5() {
             startNumbers: [],
             goalNumbers: [1,2,3,4,5,6],
             constraints: [
-                // TODO: ?!
                 CONSTRAINTS.LIKE_REAL_DICE
             ]
         }
@@ -322,33 +317,6 @@ function level6() {
     const w = Math.max(a, b) * 2, h = Math.max(a, b) * 2;
     const tiles = makeTileRect(a, b);
 
-
-    tiles[6].addComponent(GoalTile.create(tiles[6]));
-    tiles[50].addComponent(NumberTile.create(tiles[50], 1));
-    tiles[51].addComponent(NumberTile.create(tiles[51], 2));
-    tiles[52].addComponent(NumberTile.create(tiles[52], 3));
-    tiles[53].addComponent(NumberTile.create(tiles[53], 4));
-    tiles[54].addComponent(NumberTile.create(tiles[54], 5));
-
-    tiles[7].addComponent(NumberTile.create(tiles[7], 6));
-    tiles[14].addComponent(NumberTile.create(tiles[14], 1));
-    tiles[21].addComponent(NumberTile.create(tiles[21], 2));
-    tiles[28].addComponent(NumberTile.create(tiles[28], 3));
-    tiles[35].addComponent(NumberTile.create(tiles[35], 4));
-    tiles[42].addComponent(NumberTile.create(tiles[42], 5));
-
-    tiles[13].addComponent(NumberTile.create(tiles[13], 5));
-    tiles[20].addComponent(NumberTile.create(tiles[20], 4));
-    tiles[27].addComponent(NumberTile.create(tiles[27], 3));
-    tiles[34].addComponent(NumberTile.create(tiles[34], 2));
-    tiles[41].addComponent(NumberTile.create(tiles[41], 1));
-    tiles[48].addComponent(NumberTile.create(tiles[48], 6));
-
-    tiles[1].addComponent(NumberTile.create(tiles[1], 5));
-    tiles[2].addComponent(NumberTile.create(tiles[2], 4));
-    tiles[3].addComponent(NumberTile.create(tiles[3], 3));
-    tiles[4].addComponent(NumberTile.create(tiles[4], 2));
-    tiles[5].addComponent(NumberTile.create(tiles[5], 1));
     const startPos = tiles[49].getTilePosition();
 
     setTileToWater(tiles[0]);
@@ -364,8 +332,38 @@ function level6() {
     setTileToWater(tiles[47]);
     setTileToWater(tiles[55]);
 
+    setTileToNumber(tiles[50], 1);
+    setTileToNumber(tiles[51], 2);
+    setTileToNumber(tiles[52], 3);
+    setTileToNumber(tiles[53], 4);
+    setTileToNumber(tiles[54], 5);
+
+    setTileToNumber(tiles[14], 1);
+    setTileToNumber(tiles[21], 2);
+    setTileToNumber(tiles[28], 3);
+    setTileToNumber(tiles[35], 4);
+    setTileToNumber(tiles[42], 5);
+    setTileToNumber(tiles[7],  6);
+
+    setTileToNumber(tiles[13], 5);
+    setTileToNumber(tiles[20], 4);
+    setTileToNumber(tiles[27], 3);
+    setTileToNumber(tiles[34], 2);
+    setTileToNumber(tiles[41], 1);
+    setTileToNumber(tiles[48], 6);
+
+    setTileToNumber(tiles[1], 5);
+    setTileToNumber(tiles[2], 4);
+    setTileToNumber(tiles[3], 3);
+    setTileToNumber(tiles[4], 2);
+    setTileToNumber(tiles[5], 1);
+
+    setTileToGoal(tiles[6]);
+
     const objects = [
-        createPlayer(startPos[0], startPos[1], startPos[2]),
+        createPlayer(startPos[0], startPos[1], startPos[2], [
+            { pos: DICE_POS.BOTTOM, value: 1 },
+        ]),
         createBackground()
     ];
 
@@ -377,10 +375,8 @@ function level6() {
         depth: 1,
         settings: {
             startNumbers: [1],
-            diceStart: [6, 0, 0], // top left right
             goalNumbers: [1, 2, 3, 4, 5, 6],
             constraints: [
-                // TODO: ?!
                 CONSTRAINTS.LIKE_REAL_DICE
             ]
         }

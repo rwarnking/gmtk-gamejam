@@ -24,12 +24,12 @@ document.addEventListener("DOMContentLoaded", function() {
             Inputs.update();
             GAME.sceneMgr().update(delta);
             if (Inputs.isMouseButtonDown(MOUSE_BUTTON.LEFT)) {
-                const pickeid = GAME.renderer().pickingrender(
+                const pickID = GAME.renderer().pickingrender(
                     GAME.pickingScene(),
                     Inputs.getMousePosition(MOUSE_BUTTON.LEFT)
                 );
-                if (pickeid > 0) {
-                    GAME.sceneMgr().pickObject(pickeid, MOUSE_BUTTON.LEFT);
+                if (pickID > 0) {
+                    GAME.sceneMgr().pickObject(pickID, MOUSE_BUTTON.LEFT);
                 }
             }
         }

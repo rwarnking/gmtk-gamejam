@@ -13,6 +13,12 @@ export default class GameObject {
         this.tags = [];
     }
 
+    /**
+     * Called when this game object is deleted,
+     * in case you want to do sth.
+     */
+    delete() {}
+
     static nextColorID() {
         const val = colorid;
         colorid+=1; // TODO: change to increment of 1
@@ -43,11 +49,24 @@ export default class GameObject {
     }
 
     hasObject3D() {
-        return this.obj3d !== null;
+        return this.obj3d !== null && this.obj3d !== undefined &&
+            this.obj3d !== {};
+    }
+
+    forObject3D(callback) {
+        if (this.hasObject3D()) {
+            callback(this.getObject3D());
+        }
+        this.components.forEach(c => {
+            if (c.hasObjects3D()) {
+                c.getObjects3D().forEach(o => callback(o));
+            }
+        });
     }
 
     addComponent(component) {
         this.components.push(component);
+        return component;
     }
 
     addTag(tag) {

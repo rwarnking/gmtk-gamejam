@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import Component from "../component";
 import DIRECTION from "../enums/direction";
-import REAL_DICE, { DICE_POS, DICE_MOVE_H, DICE_MOVE_V, decrement, increment } from "../enums/real-dice";
+import REAL_DICE, { DICE_POS, DICE_POS_OPP, DICE_MOVE_H, DICE_MOVE_V, decrement, increment } from "../enums/real-dice";
 
 export default class Dice extends Component {
 
@@ -13,14 +13,16 @@ export default class Dice extends Component {
      * @param {*} right
      * @param {*} func
      */
-    constructor(obj, top, left, right, func) {
+    constructor(obj, defined, func) {
         super(obj, func, null, "Dice");
         this.numbers = new Set();
         this.faces = new Map();
         Object.keys(REAL_DICE).forEach(i => this.setNumber(i, null));
-        this.initFromPreset(top, left, right);
+        if (defined) {
+            this.initFromPreset(defined);
+        }
 
-        this.materials = Dice.getAllTextures();
+        this.materials = Dice.loadAllTextures();
         this.currTextures = [
             null,
             null,
@@ -44,7 +46,7 @@ export default class Dice extends Component {
         }
     }
 
-    static getAllTextures() {
+    static loadAllTextures() {
         const textures = {};
         const loader = new THREE.TextureLoader();
         for (let i = 1; i <= 6; ++i) {
@@ -56,8 +58,8 @@ export default class Dice extends Component {
         return textures;
     }
 
-    static create(obj, top=null, left=null, right=null) {
-        return new Dice(obj, top, left, right, function(obj) {
+    static create(obj, defined) {
+        return new Dice(obj, defined, function(obj) {
             // get animation component
             const tc = obj.getComponent("TextureCycle");
             // make numbers invisible if we are moving towards a new tile
@@ -92,19 +94,16 @@ export default class Dice extends Component {
         this.setNumber(DICE_POS.RIGHT, value)
     }
 
-    initFromPreset(top, left, right) {
-        if (top !== null) {
-            this.top = top;
-            this.setNumber(DICE_POS.BOTTOM, this.getOppositeNumber(top));
-        }
-        if (left !== null) {
-            this.left = left;
-            this.setNumber(DICE_POS.BACK_RIGHT, this.getOppositeNumber(left));
-        }
-        if (right !== null) {
-            this.right = right;
-            this.setNumber(DICE_POS.BACK_LEFT, this.getOppositeNumber(right));
-        }
+    initFromPreset(defined) {
+        defined.forEach(obj => {
+            this.setNumber(obj.pos, obj.value);
+        });
+
+        Object.keys(DICE_POS).forEach(name => {
+            if (this.getNumber(DICE_POS[name]) !== null && this.getNumber(DICE_POS_OPP[name]) === null) {
+                this.setNumber(DICE_POS_OPP[name], this.getOppositeNumber(this.getNumber(DICE_POS[name])));
+            }
+        })
     }
 
     setNumber(pos, number) {
@@ -142,34 +141,42 @@ export default class Dice extends Component {
             return allNumbers.filter(n => n!==this.right && n!==7-this.right);
         }
 
+        return allNumbers.filter(n =>
+            n !== this.left  && n !== this.getOppositeNumber(this.left) &&
+            n !== this.right && n !== this.getOppositeNumber(this.right)
+        );
+
+        // TODO: set top?!
+        let top = null;
+
         // both sides are determined
         switch (this.left+this.right) {
             case 3: // 1 + 2
-                this.top = this.left === 1 ? 4 : 3;
+                top = this.left === 1 ? 4 : 3;
                 break;
             case 4: // 3 + 1
-                this.top = this.left === 3 ? 5 : 2;
+                top = this.left === 3 ? 5 : 2;
                 break;
             case 5: // 3 + 2, 4 + 1
-                this.top = this.left === 3 ? 1 : (this.left === 1 ? 5 : (this.left === 3 ? 6 : 2))
+                top = this.left === 3 ? 1 : (this.left === 1 ? 5 : (this.left === 3 ? 6 : 2))
                 break;
             case 6:// 2 + 4, 1 + 5
-                this.top = this.left === 2 ? 1 : (this.left === 1 ? 5 : (this.left === 4 ? 6 : 2))
+                top = this.left === 2 ? 1 : (this.left === 1 ? 5 : (this.left === 4 ? 6 : 2))
                 break;
             case 8: // 5 + 3, 6 + 2
-                this.top = this.left === 5 ? 1 : (this.left === 1 ? 5 : (this.left === 6 ? 2 : 6));
+                top = this.left === 5 ? 1 : (this.left === 1 ? 5 : (this.left === 6 ? 2 : 6));
                 break;
             case 9: // 6 + 3, 5 + 4
-                this.top = this.left === 6 ? 5 : (this.left === 5 ? 6 : (this.left === 6 ? 2 : 1));
+                top = this.left === 6 ? 5 : (this.left === 5 ? 6 : (this.left === 6 ? 2 : 1));
                 break;
             case 10: // 6 + 4
-                this.top = this.left === 6 ? 2 : 5;
+                top = this.left === 6 ? 2 : 5;
                 break;
             case 11: // 6 + 5
-                this.top = this.left === 6 ? 4 : 3;
+                top = this.left === 6 ? 4 : 3;
                 break;
         }
-        return [this.getOppositeNumber(this.top)]
+        return [this.getOppositeNumber(top)]
     }
 
     getOppositeNumber(number) {
@@ -181,11 +188,21 @@ export default class Dice extends Component {
             !this.numbers.has(this.getNumber(DICE_POS.BOTTOM));
     }
 
+    isDefined(number) {
+        const l = Array.from(this.faces.values());
+        return l.includes(number);
+    }
+
+    isDefinedOtherPosition(number) {
+        if (this.getNumber(DICE_POS.BOTTOM) === number) {
+            return false;
+        }
+        return this.isDefined(number);
+    }
+
     canAddNumber(number, mustBeOpposite=false) {
-        return this.isEmpty() && (!mustBeOpposite ||
-            (this.getNumber(DICE_POS.TOP) === null ||
-            this.getOppositeNumber(number) === this.getNumber(DICE_POS.TOP) ||
-            !this.numbers.has(this.getNumber(DICE_POS.TOP))));
+        return this.isEmpty() && (!mustBeOpposite || !this.isDefinedOtherPosition(number) &&
+            (this.getNumber(DICE_POS.TOP) === null || this.getOppositeNumber(this.getNumber(DICE_POS.TOP)) === number)); // || !this.numbers.has(this.getNumber(DICE_POS.TOP))));
     }
 
     /**
@@ -194,15 +211,12 @@ export default class Dice extends Component {
      * @param {*} update
      */
     addNumber(number, update=true) {
-        if (!this.isEmpty()) {
-            console.error("dice face already has a number");
-            return;
-        }
-        this.numbers.add(number);
+        this.addNumberOnly(number);
         if (this.top === null) {
             this.top = this.getOppositeNumber(number);
         }
         this.setNumber(DICE_POS.BOTTOM, number);
+
         if (update) {
             this.updateTextures();
         }
@@ -210,6 +224,22 @@ export default class Dice extends Component {
 
     addNumberOnly(number) {
         this.numbers.add(number);
+    }
+
+    addNumberWithoutPos(number) {
+        this.addNumberOnly(number);
+        if (!this.isDefined(number)) {
+            const names = Object.keys(DICE_POS);
+            for (let i = 0; i < names.length; ++i) {
+                if (this.getNumber(DICE_POS[names[i]]) === null) {
+                    this.setNumber(DICE_POS[names[i]], number);
+                    this.setNumber(DICE_POS_OPP[names[i]], this.getOppositeNumber(number));
+                    break;
+                }
+            }
+        }
+        this.updateTextures();
+
     }
 
     /**
@@ -220,11 +250,15 @@ export default class Dice extends Component {
         const number = this.getNumber(DICE_POS.BOTTOM);
         if (number !== null) {
             this.numbers.delete(number);
-            this.setNumber(DICE_POS.BOTTOM, null);
+            if (this.getNumber(DICE_POS.TOP) === null || !this.numbers.has(this.getNumber(DICE_POS.TOP))) {
+                this.setNumber(DICE_POS.TOP, null);
+                this.setNumber(DICE_POS.BOTTOM, null);
+            }
         }
         if  (update) {
             this.updateTextures();
         }
+        return number;
     }
 
     move(direction) {
@@ -267,6 +301,17 @@ export default class Dice extends Component {
             this.left,
             this.right
         ]
+    }
+
+    getFaces() {
+        const map = new Map();
+        this.faces.forEach((n, i) => {
+            map.set(i, {
+                number: n,
+                collected: n !== null && this.numbers.has(n)
+            });
+        });
+        return map;
     }
 
     updateVisibleNumbers() {

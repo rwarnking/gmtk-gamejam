@@ -5,15 +5,16 @@ const EFFECTS = {
     SPLASH: "audio/splash.mp3",
     WIN: "audio/winfantasia_short.mp3",
     FAIL: "audio/nonwin.mp3",
+    BUTTON: "audio/click_click.mp3",
 };
 
 const EFFECT_VOL_MOD = {
     ROLL: 0.5,
-    BUMP: 1,
-    COLLECT: 1,
-    SPLASH: 1,
-    WIN: 1,
-    FAIL: 1
+    BUTTON: 1.5,
+}
+
+const EFFECT_SPEED_MOD = {
+    BUTTON: 1.5,
 }
 
 const SONGS = [
@@ -22,4 +23,4 @@ const SONGS = [
 ];
 
 
-export { SONGS, EFFECTS, EFFECT_VOL_MOD };
+export { SONGS, EFFECTS, EFFECT_VOL_MOD, EFFECT_SPEED_MOD };

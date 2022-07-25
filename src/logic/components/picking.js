@@ -9,6 +9,7 @@ export default class Picking extends Component {
         this.x = x;
         this.y = y;
         this.pickingColor = GameObject.idToColor(obj.id);
+        // special case, should not be added to objects list
         this.pickingObj = Picking.makePickingObject(
             x, y, texture, this.pickingColor
         );

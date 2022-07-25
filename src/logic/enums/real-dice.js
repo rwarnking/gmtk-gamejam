@@ -16,6 +16,15 @@ const DICE_POS =  Object.freeze({
     BOTTOM: 0
 });
 
+const DICE_POS_OPP =  Object.freeze({
+    TOP: DICE_POS.BOTTOM,
+    LEFT: DICE_POS.BACK_RIGHT,
+    RIGHT: DICE_POS.BACK_LEFT,
+    BACK_RIGHT: DICE_POS.LEFT,
+    BACK_LEFT: DICE_POS.RIGHT,
+    BOTTOM: DICE_POS.TOP,
+});
+
 const DICE_MOVE_H = [
     DICE_POS.BOTTOM, DICE_POS.LEFT,
     DICE_POS.TOP, DICE_POS.BACK_RIGHT,
@@ -36,6 +45,7 @@ function increment(array, pos) {
 export {
     REAL_DICE as default,
     DICE_POS,
+    DICE_POS_OPP,
     DICE_MOVE_H,
     DICE_MOVE_V,
     decrement,

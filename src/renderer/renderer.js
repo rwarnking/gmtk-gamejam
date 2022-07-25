@@ -27,7 +27,7 @@ export default class Renderer {
     }
 
     setupRenderer() {
-        this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.2, 1000);
+        this.camera = new THREE.PerspectiveCamera(65, this.width / this.height, 0.1, 1000);
         // this.camera = new THREE.OrthographicCamera(
         //     this.width / - 2,
         //     this.width / 2,
@@ -71,9 +71,9 @@ export default class Renderer {
         );
 
         const id =
-            (this.pixelBuffer[2] << 16) +
+            (this.pixelBuffer[0]) +
             (this.pixelBuffer[1] <<  8) +
-            (this.pixelBuffer[0]);
+            (this.pixelBuffer[2] << 16);
 
         return id;
     }

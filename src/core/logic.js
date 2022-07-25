@@ -1,5 +1,6 @@
 import GAME from "./globals";
 import CONSTRAINTS from "../logic/enums/constraints";
+import MODES from "../logic/enums/game-modes";
 
 export default class Logic {
 
@@ -7,6 +8,7 @@ export default class Logic {
         this.player = null;
         this.dice = null;
         this.settings = null;
+        this.gameMode = MODES.PUZZLE;
         this.reset();
     }
 
@@ -22,7 +24,7 @@ export default class Logic {
             this.settings.goalNumbers.forEach(n => {
                 this.goalNumbers.add(n);
             });
-            this.constraints = this.settings.constraints;
+            this.constraints = this.gameMode === MODES.PUZZLE ? this.settings.constraints : [];
         }
     }
 
@@ -45,7 +47,6 @@ export default class Logic {
 
     setGoalReached(value) {
         this.goalReached = value;
-        console.log(value ? "goal reached" : "goal left");
         if (value && !this.isOver()) {
             GAME.audio().playEffect("FAIL");
             console.log("still missing numbers");
@@ -60,7 +61,7 @@ export default class Logic {
             }
             return this.dice.canAddNumber(number, true);
         }
-        return this.dice.canAddNumber(number);
+        return true;
     }
 
     addNumber(number) {
@@ -70,10 +71,24 @@ export default class Logic {
         return false;
     }
 
+    removeNumber() {
+        const number = this.dice.removeNumber();
+        if (number !== null) {
+            console.log("removed number", number)
+            this.numbersCollected.delete(number);
+        }
+    }
+
     addNumberDirect(number) {
-        console.log("number " + number + " was added");
         this.numbersCollected.add(number);
-        this.dice.addNumber(number);
+        switch (this.gameMode) {
+            case MODES.RELAX:
+                this.dice.addNumberWithoutPos(number);
+                break;
+            case MODES.PUZZLE:
+                this.dice.addNumber(number);
+                break;
+        }
         GAME.audio().playEffect("COLLECT");
         return true;
     }
@@ -85,6 +100,47 @@ export default class Logic {
             }
         }
         return true;
+    }
+
+    getGameMode() {
+        return this.gameMode;
+    }
+
+    setGameMode(mode) {
+        switch(mode) {
+            case MODES.RELAX:
+                this.removeConstraint(CONSTRAINTS.LIKE_REAL_DICE);
+                break;
+            case MODES.PUZZLE:
+                this.addConstraint(CONSTRAINTS.LIKE_REAL_DICE);
+                break;
+        }
+        this.gameMode = mode;
+    }
+
+    toggleGameMode() {
+        switch(this.gameMode) {
+            case MODES.RELAX:
+                this.setGameMode(MODES.PUZZLE);
+                break;
+            case MODES.PUZZLE:
+                this.setGameMode(MODES.RELAX);
+                break;
+        }
+    }
+
+    addConstraint(constraint) {
+        if (!this.constraints.includes(constraint)) {
+            this.constraints.push(constraint);
+        }
+    }
+
+    removeConstraint(constraint) {
+        if (constraint === undefined) {
+            this.constraints = [];
+        } else {
+            this.constraints = this.constraints.filter(c => c !== constraint);
+        }
     }
 
     testConstraint(constraint) {

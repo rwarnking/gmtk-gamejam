@@ -5,20 +5,21 @@ import Component from "../component";
 import UIElement from "../gameobjects/ui-element";
 
 export default function createFairy(x, y) {
-    const fairy = new UIElement(x, y, "assets/sprites/fairy2story.png", true);
+    const fairy = new UIElement(x, y, "assets/sprites/ui/fairy2story.png", true);
 
-    fairy.getObject3D().scale.set(6, 4, 1);
+    fairy.getObject3D().scale.set(4, 2.5, 1);
     const maxLife = 40000, threshold = 1000;
     fairy.life = maxLife;
-    fairy.one = false;
+    fairy.once = false;
 
     const killComp = new Component(fairy, function(_, delta) {
+
         fairy.life -= delta;
 
         if (!fairy.once && fairy.life <= maxLife * 0.5) {
             fairy.once = true;
             fairy.getObject3D().material.map = new THREE.TextureLoader().load(
-                "assets/sprites/fairy2wasd.png"
+                "assets/sprites/ui/fairy2wasd.png"
             )
         } else if (fairy.life < threshold) {
             const frac = fairy.life / threshold;

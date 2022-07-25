@@ -5,6 +5,15 @@ export default class Component {
         this.obj = gameobject;
         this.uFunc = uFunc;
         this.cFunc = cFunc;
+        this.objects = [];
+    }
+
+    hasObjects3D() {
+        return this.objects.length > 0;
+    }
+
+    getObjects3D() {
+        return this.objects;
     }
 
     /**
