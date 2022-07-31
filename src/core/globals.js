@@ -2,6 +2,7 @@ import TAGS from "../logic/enums/tags";
 import AudioManager from "./audio";
 import Inputs from "./inputs";
 import Events from "./events";
+import $ from 'cash-dom'
 
 const GAME = (function() {
 
@@ -17,11 +18,26 @@ const GAME = (function() {
     return {
 
         init: function(rendererObject, smgrObject, logicObject) {
+
             audioMgr = new AudioManager();
             renderer = rendererObject;
             renderer.setupRenderer();
             smgr = smgrObject
             logic = logicObject;
+
+            // try to work around the "cant play sound before interaction" restriction
+            let interacted = false;
+            const soundWorkaround = () => {
+                if (!interacted) {
+                    console.log("playing song");
+                    interacted = true;
+                    audioMgr.init();
+                    $(window).off("click", soundWorkaround);
+                    $(window).off("keydown", soundWorkaround);
+                }
+            };
+            $(window).on("click", soundWorkaround);
+            $(window).on("keydown", soundWorkaround);
 
             Events.on("setGameDims", this.setGameDims)
 

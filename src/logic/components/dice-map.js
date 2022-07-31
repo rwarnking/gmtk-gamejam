@@ -52,13 +52,13 @@ export default class DiceMap extends Component {
         const loader = new THREE.TextureLoader();
         for (let i = 0; i <= 6; ++i) {
             // normal faces
-            let tex = loader.load(`assets/sprites/dice/dice-map-${i}.png`);
+            let tex = loader.load(`assets/sprites/dice/dice-map-${i}.png`)
             textures.set(""+i, tex);
             // bottom faces
-            tex = loader.load(`assets/sprites/dice/dice-map-${i}_bot.png`);
+            tex = loader.load(`assets/sprites/dice/dice-map-${i}_bot.png`)
             textures.set("bot_"+i, tex);
             // top faces
-            tex = loader.load(`assets/sprites/dice/dice-map-${i}_top.png`);
+            tex = loader.load(`assets/sprites/dice/dice-map-${i}_top.png`)
             textures.set("top_"+i, tex);
         }
         return textures;

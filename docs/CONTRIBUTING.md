@@ -1,8 +1,8 @@
-# Contributing to PDF games
+# Contributing to our GMTK gamejam game
 
 Thanks for thinking about contribution!
 
-Here you can find a set of guidelines for contributing to this github-project.
+Here you can find a set of guidelines for contributing to this GitHub-project.
 These are mostly guidelines, not rules.
 Use your best judgment, and feel free to propose changes to this document in a pull request.
 
@@ -15,7 +15,7 @@ Use your best judgment, and feel free to propose changes to this document in a p
 
 2. [Styleguides](#styleguides)
     * [Git Commit Messages](#git-commit-messages)
-    * [Python Styleguide](#python-styleguide)
+    * [JavaScript Styleguide](#javascript-styleguide)
 
 ## How Can I Contribute?
 
@@ -24,7 +24,7 @@ Use your best judgment, and feel free to propose changes to this document in a p
 #### Before Submitting A Bug Report
 Make sure to search for [issues](https://github.com/rwarnking/image-sorter/issues).
 that already mention this problem. If you find any, take a look
-if you can provide aditional information that is not mentioned already.
+if you can provide additional information that is not mentioned already.
 
 #### How Do I Submit A (Good) Bug Report?
 If you're unable to find an open issue addressing the problem,
@@ -93,10 +93,6 @@ or other changes before your pull request can be ultimately accepted.
   * :arrow_down: `:arrow_down:` when downgrading dependencies
   * :shirt: `:shirt:` when removing linter warnings
 
-### Latex Styleguide
+### JavaScript Styleguide
 
-TODO
-
-### Javascript Styleguide
-
-See wiki for [naming convention](https://github.com/rwarnking/pdf-games/wiki/Naming-Convention).
+Look [here](https://www.w3schools.com/js/js_conventions.asp) for naming conventions.

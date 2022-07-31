@@ -51,7 +51,7 @@ export default class Dice extends Component {
         const loader = new THREE.TextureLoader();
         for (let i = 1; i <= 6; ++i) {
             for (let j = 1; j <= 3; ++j) {
-                const tex = loader.load(`assets/sprites/dice/dice-${i}-${j}.png`);
+                const tex = loader.load(`assets/sprites/dice/dice-${i}-${j}.png`)
                 textures[""+i+"-"+j] = tex;
             }
         }
